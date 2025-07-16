@@ -1,0 +1,10 @@
+---
+// src/pages/cart.astro
+import DefaultLayout from "../layouts/DefaultLayout.astro";
+import CartView from "../components/Cart/CartView.svelte";
+---
+
+<DefaultLayout>
+  <h1>Your Cart</h1>
+  <CartView client:only />
+</DefaultLayout>

@@ -1,0 +1,27 @@
+---
+import DefaultLayout from "../../layouts/DefaultLayout.astro";
+import { shopifyFetch } from "@lib/shopify.js";
+import {
+  GET_PRODUCT_BY_HANDLE,
+  GET_PRODUCT_HANDLES,
+} from "@lib/queries/products.ts";
+import ProductDetail from "@components/Product/ProductDetail.svelte";
+
+export async function getStaticPaths() {
+  const data = await shopifyFetch(GET_PRODUCT_HANDLES);
+  const products = data.products;
+
+  return products.map((product) => ({
+    params: { handle: product.handle },
+  }));
+}
+
+const { handle } = Astro.params;
+
+const data = await shopifyFetch(GET_PRODUCT_BY_HANDLE, { handle });
+const product = data.productByHandle;
+---
+
+<DefaultLayout title={`${product.title} | Shopify Starter`}>
+  <ProductDetail client:load product={product} />
+</DefaultLayout>

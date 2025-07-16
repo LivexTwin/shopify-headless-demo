@@ -1,0 +1,36 @@
+---
+const { product, eager = false } = Astro.props;
+
+import ShopifyImage from "../ShopifyImage.svelte";
+import Money from "../Money.svelte";
+import SoldOut from "./SoldOut.svelte";
+const featuredImage = product.images?.[0] || null;
+---
+
+<article class="product-card">
+  <a href={`/products/${product.handle}`}>
+    {
+      featuredImage && (
+        <ShopifyImage
+          image={{
+            url: featuredImage.url,
+            altText: featuredImage.altText || product.title,
+            width: 300, // or actual image width if you want
+            height: 300, // or fixed aspect ratio height
+          }}
+          loading={eager ? "eager" : "lazy"}
+          classList="product-card__image"
+          sizes="(max-width: 600px) 100vw, 300px"
+        />
+      )
+    }
+
+    <SoldOut variants={product.variants} />
+
+    <h2>{product.title}</h2>
+    <Money
+      amount={product.variants?.[0]?.price.amount}
+      currencyCode={product.variants?.[0]?.price.currencyCode}
+    />
+  </a>
+</article>

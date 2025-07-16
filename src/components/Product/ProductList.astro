@@ -1,0 +1,14 @@
+---
+import ProductCard from "./ProductCard.astro";
+const { products } = Astro.props;
+---
+
+<ul class="product-list">
+  {
+    products.map((product, index) => (
+      <li key={product.id}>
+        <ProductCard product={product} eager={index < 2} />
+      </li>
+    ))
+  }
+</ul>

@@ -1,0 +1,15 @@
+---
+import DefaultLayout from "../layouts/DefaultLayout.astro";
+import { shopifyFetch } from "../lib/shopify.js";
+import { GET_PRODUCTS } from "../lib/queries/products.ts";
+import ProductList from "../components/Product/ProductList.astro";
+
+const data = await shopifyFetch(GET_PRODUCTS);
+const products = data.products;
+// console.log("Products fetched:", products); // Uncomment for debugging
+---
+
+<DefaultLayout title="Home | Shopify Starter">
+  <h1>🔥 Live Products from Shopify</h1>
+  <ProductList products={products} />
+</DefaultLayout>
