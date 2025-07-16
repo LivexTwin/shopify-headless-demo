@@ -1,5 +1,6 @@
 import { defineConfig } from "astro/config";
 import svelte from "@astrojs/svelte";
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
   integrations: [svelte()],
@@ -12,5 +13,6 @@ export default defineConfig({
         "@stores": "/src/stores",
       },
     },
+    plugins: [tailwindcss()],
   },
 });
