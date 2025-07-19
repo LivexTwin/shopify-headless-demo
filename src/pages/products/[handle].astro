@@ -6,6 +6,8 @@ import {
   GET_PRODUCT_HANDLES,
 } from "@lib/queries/products.ts";
 import ProductDetail from "@components/Product/ProductDetail.svelte";
+import ProductReviews from "@components/Product/ProductReviews.astro";
+import BreadCrumb from "@components/Product/BreadCrumb.astro";
 
 export async function getStaticPaths() {
   const data = await shopifyFetch(GET_PRODUCT_HANDLES);
@@ -23,5 +25,9 @@ const product = data.productByHandle;
 ---
 
 <DefaultLayout title={`${product.title} | Shopify Starter`}>
-  <ProductDetail client:load product={product} />
+  <ProductDetail client:load product={product}>
+    <BreadCrumb title={product.title} />
+  </ProductDetail>
+
+  <ProductReviews />
 </DefaultLayout>

@@ -37,6 +37,9 @@ $: soldOut = isCompletelySoldOut(variants);
   aria-live="polite"
   aria-label={soldOut ? "Product is sold out" : "Add product to cart"}
   type="button"
+  class="w-full px-6 py-3 text-white font-semibold text-center rounded-md transition duration-300
+         disabled:bg-gray-300 disabled:text-gray-600 disabled:cursor-not-allowed
+         bg-black hover:bg-gray-900"
 >
   {soldOut ? 'Sold Out' : 'Add to Cart'}
 </button>

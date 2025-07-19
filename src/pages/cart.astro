@@ -5,6 +5,8 @@ import CartView from "../components/Cart/CartView.svelte";
 ---
 
 <DefaultLayout>
-  <h1>Your Cart</h1>
+  <h1 class="text-3xl font-bold max-w-4xl mx-auto px-4 mb-6 pt-10">
+    Your Cart
+  </h1>
   <CartView client:only />
 </DefaultLayout>

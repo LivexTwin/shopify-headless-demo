@@ -30,26 +30,39 @@ async function removeLine(lineId) {
     if (full) cart.set(full);
   }
 }
-
 </script>
 
 
-{#if $cart?.lines?.length > 0}
-  <CartContents
-    cart={$cart}
-    onUpdateQuantity={updateQuantity}
-    onRemoveLine={removeLine}
-  />
-
-  <p><strong>Subtotal:</strong> ${$cart.cost?.subtotalAmount?.amount ?? '0.00'}</p>
-
-  {#if $cart?.checkoutUrl}
-    <button on:click={() => window.location.href = $cart.checkoutUrl}>
-      Proceed to Checkout
-    </button>
-  {:else}
-    <p>No checkout available</p>
-  {/if}
+<div class="max-w-4xl mx-auto p-4">
+  {#if $cart?.lines?.length > 0}
+    <CartContents
+      cart={$cart}
+      onUpdateQuantity={updateQuantity}
+      onRemoveLine={removeLine}
+    />
+   <p class="mt-6 text-lg">
+    <span>Subtotal: </span>
+     <span class="font-bold">${$cart.cost?.subtotalAmount?.amount ?? '0.00'}</span>
+    </p>
+    {#if $cart?.checkoutUrl}
+      <button
+        class="mt-4 bg-black text-white py-2 px-4 rounded hover:bg-gray-800 transition"
+        on:click={() => window.location.href = $cart.checkoutUrl}
+      >
+        Proceed to Checkout
+      </button>
+    {:else}
+      <p>No checkout available</p>
+    {/if}
 {:else}
-  <p>Your cart is empty.</p>
+  <div class="text-center py-10">
+    <p class="mb-4">Your cart is empty.</p>
+    <a
+      href="/"
+      class="inline-block px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+    >
+      Continue Shopping
+    </a>
+  </div>
 {/if}
+</div>

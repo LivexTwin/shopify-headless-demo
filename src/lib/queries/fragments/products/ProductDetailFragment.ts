@@ -2,7 +2,7 @@ export const PRODUCT_DETAIL_FRAGMENT = `
 fragment ProductDetailFragment on Product {
   id
   title
-  description
+  descriptionHtml
   handle
   availableForSale
   images(first: 10) {

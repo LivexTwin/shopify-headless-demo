@@ -1,49 +1,56 @@
 <script>
-import VariantSelector from './VariantSelector.svelte';
+  import VariantSelector from './VariantSelector.svelte';
   import ProductAddToCart from './ProductAddToCart.svelte';
-  import ShopifyImage from '../ShopifyImage.svelte';
   import SoldOut from './SoldOut.svelte';
-  export let product; 
+  import ProductImageGallery from './ProductImageGallery.svelte';
 
-  // Initialize selectedVariantId with the first variant's ID or null if no variants exist
-let selectedVariantId = product.variants?.[0]?.id ?? null;
+  export let product;
 
+  let selectedVariantId = product.variants?.[0]?.id;
+  let selectedVariant = product.variants?.[0];
 
-  function handleVariantSelect(id) {
-    selectedVariantId = id;
+  function handleVariantSelect(variantId) {
+    selectedVariantId = variantId;
+    selectedVariant = product.variants.find(v => v.id === variantId);
   }
 </script>
 
-<article class="product-detail">
-  <h1>{product.title}</h1>
-  {#each product.images ?? [] as image (image.url)}
-    <ShopifyImage
-      image={{
-        url: image.url,
-        altText: image.altText || product.title,
-        width: 400,
-        height: Math.round(400 * (image.height / image.width))  // keep aspect ratio
-      }}
-      loading="lazy"
-      sizes="(max-width: 600px) 100vw, 400px"
-      classList="product-detail__image"
-    />
-  {/each}
-  <SoldOut variants={product.variants} />
-  <p>{product.description}</p>
+<article class="product-detail max-w-6xl mx-auto px-4 py-10">
+    <slot />    <!-- // Allows for additional content like breadcrumbs or reviews to be injected -->
 
-  <section class="product-purchase">
-  
+  <div class="flex flex-col lg:flex-row gap-10">
+    <div class="lg:w-1/2">
+      <ProductImageGallery
+        images={product.images}
+        altBase={product.title}
+        transitionId={`product-image-${product.handle}`}
+      />
+    </div>
 
-    <VariantSelector
-      variants={product.variants}
-        productId={product.id}
-      onSelect={handleVariantSelect}
-    />
-    
- <ProductAddToCart variants={product.variants} variantId={selectedVariantId} />
+    <div class="lg:w-1/2 mt-6 lg:mt-0">
+      <h1 class="text-3xl font-bold mb-4">{product.title}</h1>
 
-  </section>
+      <SoldOut variants={product.variants} />
+
+      <section class="product-purchase space-y-4 mt-4">
+        <VariantSelector
+          variants={product.variants}
+          productId={product.id}
+          onSelect={handleVariantSelect}
+        />
+
+        <ProductAddToCart
+          variants={product.variants}
+          variantId={selectedVariantId}
+        />
+      </section>
+
+      <section class="product-description pt-8">
+        <h2 class="text-lg font-semibold mb-2">Product Description</h2>
+        <div class="text-gray-700 leading-relaxed">
+          {@html product.descriptionHtml}
+        </div>
+      </section>
+    </div>
+  </div>
 </article>
-
-
