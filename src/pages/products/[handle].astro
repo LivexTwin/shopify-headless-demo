@@ -8,6 +8,7 @@ import {
 import ProductDetail from "@components/Product/ProductDetail.svelte";
 import ProductReviews from "@components/Product/ProductReviews.astro";
 import BreadCrumb from "@components/Product/BreadCrumb.astro";
+import ProductImageGallery from "@components/Product/ProductImageGallery.svelte";
 
 export async function getStaticPaths() {
   const data = await shopifyFetch(GET_PRODUCT_HANDLES);
@@ -19,15 +20,32 @@ export async function getStaticPaths() {
 }
 
 const { handle } = Astro.params;
-
 const data = await shopifyFetch(GET_PRODUCT_BY_HANDLE, { handle });
 const product = data.productByHandle;
 ---
 
 <DefaultLayout title={`${product.title} | Shopify Starter`}>
-  <ProductDetail client:load product={product}>
-    <BreadCrumb title={product.title} />
-  </ProductDetail>
+  <article class="product-detail max-w-6xl mx-auto px-4 py-10">
+    <div class="mb-6">
+      <BreadCrumb title={product.title} />
+    </div>
+
+    <div class="flex flex-col lg:flex-row gap-10">
+      <!-- ✅ SSR image gallery -->
+      <div class="lg:w-1/2">
+        <ProductImageGallery
+          client:load
+          images={product.images}
+          altBase={product.title}
+        />
+      </div>
+
+      <!-- ✅ Svelte client-only logic -->
+      <div class="lg:w-1/2 mt-6 lg:mt-0">
+        <ProductDetail client:only="svelte" product={product} />
+      </div>
+    </div>
+  </article>
 
   <ProductReviews />
 </DefaultLayout>

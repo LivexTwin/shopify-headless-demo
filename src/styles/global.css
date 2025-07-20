@@ -1,1 +1,34 @@
 @import "tailwindcss";
+#site {
+  min-height: 100dvh;
+  min-height: 100svh;
+  margin-inline: auto;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+button {
+  @apply cursor-pointer
+          disabled:pointer-events-none
+         transition-colors duration-200 ease-in-out;
+}
+
+svg {
+  @apply transition-opacity duration-200 ease-in-out;
+}
+
+svg:hover {
+  @apply opacity-60;
+}
+
+header {
+  @apply sticky top-0 z-50 bg-white border-b border-gray-200;
+}
+
+.product-description a {
+  @apply text-blue-700 underline decoration-blue-700 decoration-2;
+}
+
+::selection {
+  @apply bg-blue-300 text-white;
+}

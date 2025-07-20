@@ -2,9 +2,26 @@
 import CartIcon from "./Cart/CartIcon.svelte";
 ---
 
-<nav class="site-nav">
-  <a href="/">Home</a>
-  <a href="/">Shop</a>
-  <a href="/contact">Contact</a>
-  <CartIcon client:load />
+<nav class="site-nav max-w-7xl mx-auto px-4 py-4">
+  <div class="flex items-center justify-between">
+    <a href="/" class="flex items-center gap-3">
+      <img src="/astro-logo.svg" alt="Astro" class="w-8 h-8" />
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="w-6 h-6 text-black"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M12 4.5v15m7.5-7.5h-15"></path>
+      </svg>
+      <img src="/svelte-logo.svg" alt="Svelte" class="w-8 h-8" />
+    </a>
+
+    <CartIcon client:load />
+  </div>
 </nav>

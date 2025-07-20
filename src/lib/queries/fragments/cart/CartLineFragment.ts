@@ -10,6 +10,7 @@ fragment CartLineFragment on CartLine {
         amount
         currencyCode
       }
+        availableForSale
        quantityAvailable
       product {
         title

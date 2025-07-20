@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css";
 import TheNavigation from "../components/TheNavigation.astro";
+import TheFooter from "../components/TheFooter.astro";
 
 const {
   title = "Shopify Starter",
@@ -15,6 +16,7 @@ const {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
     <title>{title}</title>
+
     <link rel="icon" href="/favicon.svg" /><link
       rel="stylesheet"
       href="/src/styles/layout.css"
@@ -26,9 +28,14 @@ const {
     -->
 
   <body>
-    <header><TheNavigation /></header>
-    <main>
-      <slot />
-    </main>
+    <div id="site">
+      <header><TheNavigation /></header>
+
+      <main>
+        <slot />
+      </main>
+
+      <footer><TheFooter /></footer>
+    </div>
   </body>
 </html>

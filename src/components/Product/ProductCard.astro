@@ -8,6 +8,7 @@ const featuredImage = product.images?.[0] || null;
 ---
 
 <article
+  class="animate-fade-in"
   class="group bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-200"
 >
   <a href={`/products/${product.handle}`} class="block p-4">
@@ -23,11 +24,12 @@ const featuredImage = product.images?.[0] || null;
         classList="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
         sizes="(max-width: 600px) 100vw, 300px"
       />
+      <div class="absolute top-2 right-2 z-10">
+        <SoldOut variants={product.variants} />
+      </div>
     </div>
 
     <div class="mt-4 flex flex-col gap-1">
-      <SoldOut variants={product.variants} />
-
       <h2
         class="text-base font-medium text-gray-900 group-hover:text-blue-700 transition-colors"
       >

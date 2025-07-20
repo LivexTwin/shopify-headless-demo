@@ -21,3 +21,7 @@ export function canIncrementQuantity(currentQuantity, totalInventory) {
   // Otherwise, allow increment only if currentQuantity < totalInventory
   return currentQuantity < totalInventory;
 }
+
+export function isOnlyOneLeft(variant) {
+  return variant?.quantityAvailable === 1 && variant?.availableForSale;
+}

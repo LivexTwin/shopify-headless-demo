@@ -14,5 +14,8 @@ export default defineConfig({
       },
     },
     plugins: [tailwindcss()],
+    server: {
+      allowedHosts: ["red-memes-bet.loca.lt"],
+    },
   },
 });
