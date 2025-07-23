@@ -12,7 +12,7 @@
     "@astrojs/svelte": "^7.1.0",
     "@nanostores/persistent": "^1.0.0",
     "@tailwindcss/vite": "^4.1.11",
-    "astro": "^5.11.2",
+    "astro": "^5.12.2",
     "nanostores": "^1.0.1",
     "svelte": "^5.34.9",
     "tailwindcss": "^4.1.11",
