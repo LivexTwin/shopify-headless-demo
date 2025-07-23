@@ -2,12 +2,13 @@
 
 A lightweight, modern starter kit built with **Astro + Svelte** and powered by the **Shopify Storefront API**. Designed for speed, clarity, and full creative control — ideal for developers building performant headless storefronts with minimal setup.
 
-## 🌍 Live Demo
+## 🌍 Live Demo 
 
 [https://shopify-headless-demo.netlify.app](https://shopify-headless-demo.netlify.app)  
-[![Netlify Status](https://api.netlify.com/api/v1/badges/822c7039-d04c-4255-a8d4-a9d6b5438e4c/deploy-status)](https://app.netlify.com/projects/shopify-headless-demo/deploys)
 
----
+[![Netlify Status](https://api.netlify.com/api/v1/badges/822c7039-d04c-4255-a8d4-a9d6b5438e4c/deploy-status)](https://app.netlify.com/projects/shopify-headless-demo/deploys)
+[![Built with Astro](https://astro.badg.es/v2/built-with-astro/tiny.svg)](https://astro.build)
+
 
 ## ✨ Features
 
@@ -70,6 +71,7 @@ npm run dev
 
 ## 📁 Project Structure
 
+```text
 shopify-headless-demo/
 ├── public/ # Static assets (favicons, SEO images, etc.)
 ├── src/
@@ -82,7 +84,7 @@ shopify-headless-demo/
 ├── .env.example # Template for environment variables
 ├── README.md
 └── package.json
-
+```
 ## 💡 Notes
 
 This starter is intentionally minimal — no heavy UI libraries or styling decisions baked in. It's meant to be a foundation you can shape into a unique, performant eCommerce experience.
@@ -130,4 +132,3 @@ This project is open-source under the [MIT License](./LICENSE).
 ---
 
 Made with ❤️ by [Anthony](https://github.com/livextwin)
-[![Built with Astro](https://astro.badg.es/v2/built-with-astro/tiny.svg)](https://astro.build)
