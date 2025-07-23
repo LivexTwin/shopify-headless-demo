@@ -13,19 +13,31 @@
 
   const srcSetWidths = [100, 200, 400, 600, 800, 1000, 1200, 1600];
 
+ 
+  function formatWebpUrl(baseUrl: string, width?: number) {
+    const url = new URL(baseUrl);
+    if (width) url.searchParams.set("width", String(width));
+    url.searchParams.set("format", "webp");
+    return url.toString();
+  }
+
   function generateSrcSet() {
     if (!image) return "";
     return srcSetWidths
       .filter((w) => w < image.width)
-      .map((w) => `${image.url}&width=${w} ${w}w`)
-      .concat(`${image.url} ${image.width}w`)
+      .map((w) => `${formatWebpUrl(image.url, w)} ${w}w`)
+      .concat(`${formatWebpUrl(image.url)} ${image.width}w`)
       .join(", ");
+  }
+
+  function getMainSrc() {
+    return formatWebpUrl(image?.url || "");
   }
 </script>
 
 {#if image}
   <img
-    src={image.url}
+    src={getMainSrc()}
     alt={image.altText || "Product image"}
     class={classList}
     width={image.width}

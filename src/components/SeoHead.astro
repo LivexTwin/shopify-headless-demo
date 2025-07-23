@@ -1,0 +1,25 @@
+---
+const {
+  title = "Shopify Starter Demo",
+  description = "Fast, modern headless Shopify storefront built with Astro and Svelte.",
+  ogImage = "/og-default.jpg", // fallback image path
+  url = "/",
+} = Astro.props;
+
+const baseUrl = Astro.site
+  ? Astro.site.toString().replace(/\/$/, "")
+  : "https://shopify-headless-demo.netlify.app";
+const fullUrl = url.startsWith("http") ? url : baseUrl + url;
+---
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<meta property="og:url" content={fullUrl} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />

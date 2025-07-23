@@ -1,15 +1,18 @@
 ---
 import DefaultLayout from "../layouts/DefaultLayout.astro";
-import { shopifyFetch } from "../lib/shopify.js";
+import { shopifyFetch } from "../lib/shopify.ts";
 import { GET_PRODUCTS } from "../lib/queries/products.ts";
 import ProductList from "../components/Product/ProductList.astro";
+import SeoHead from "../components/SeoHead.astro";
 
 const data = await shopifyFetch(GET_PRODUCTS);
 const products = data.products;
+
 // console.log("Products fetched:", products); // Uncomment for debugging
 ---
 
-<DefaultLayout title="Home | Shopify Starter">
+<SeoHead title="Home | Shopify Headless Demo" />
+<DefaultLayout>
   <h1 class="text-2xl font-bold mt-4 mb-6 text-center text-balance">
     Shopify + Astro + Svelte 🚀 Demo Store
   </h1>

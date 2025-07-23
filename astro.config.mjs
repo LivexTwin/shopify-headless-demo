@@ -4,6 +4,9 @@ import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
   integrations: [svelte()],
+  prefetch: {
+    prefetchAll: true,
+  },
   vite: {
     resolve: {
       alias: {
@@ -14,8 +17,6 @@ export default defineConfig({
       },
     },
     plugins: [tailwindcss()],
-    server: {
-      allowedHosts: ["red-memes-bet.loca.lt"],
-    },
   },
+  site: "https://shopify-headless-demo.netlify.app",
 });

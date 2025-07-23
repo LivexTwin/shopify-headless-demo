@@ -14,14 +14,6 @@ export async function buyNow(variantId) {
   window.location.href = updatedCart.checkoutUrl;
 }
 
-export function canIncrementQuantity(currentQuantity, totalInventory) {
-  // If totalInventory is -1 (untracked), allow increment
-  if (totalInventory === -1) return true;
-
-  // Otherwise, allow increment only if currentQuantity < totalInventory
-  return currentQuantity < totalInventory;
-}
-
 export function isOnlyOneLeft(variant) {
   return variant?.quantityAvailable === 1 && variant?.availableForSale;
 }

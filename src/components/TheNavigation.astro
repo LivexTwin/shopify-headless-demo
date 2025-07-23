@@ -4,7 +4,12 @@ import CartIcon from "./Cart/CartIcon.svelte";
 
 <nav class="site-nav max-w-7xl mx-auto px-4 py-4">
   <div class="flex items-center justify-between">
-    <a href="/" class="flex items-center gap-3">
+    <a
+      href="/"
+      class="flex items-center gap-3"
+      aria-label="Home — Astro and Svelte demo store"
+      role="link"
+    >
       <img src="/astro-logo.svg" alt="Astro" class="w-8 h-8" />
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -13,6 +18,7 @@ import CartIcon from "./Cart/CartIcon.svelte";
         stroke-width="1.5"
         stroke="currentColor"
         class="w-6 h-6 text-black"
+        aria-hidden="true"
       >
         <path
           stroke-linecap="round"

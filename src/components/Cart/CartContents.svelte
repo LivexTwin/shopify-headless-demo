@@ -34,7 +34,7 @@
 </script>
 
 <ul class="space-y-6">
-  {#each cart.lines as line (line.id)}
+  {#each cart.lines as line, index (line.id)}
     <li class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-gray-50 p-4 rounded-xl shadow-sm">
       <div class="flex gap-4 items-start sm:items-center">
         
@@ -46,7 +46,7 @@
               width: 100,
               height: Math.round(100 * (line.merchandise.product.images[0]?.height / line.merchandise.product.images[0]?.width))
             }}
-            loading="lazy"
+               loading={index === 0 ? "eager" : "lazy"}
             classList="rounded-md"
           />
         </a>

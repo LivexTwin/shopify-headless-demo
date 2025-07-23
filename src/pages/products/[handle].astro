@@ -9,6 +9,9 @@ import ProductDetail from "@components/Product/ProductDetail.svelte";
 import ProductReviews from "@components/Product/ProductReviews.astro";
 import BreadCrumb from "@components/Product/BreadCrumb.astro";
 import ProductImageGallery from "@components/Product/ProductImageGallery.svelte";
+import SeoHead from "@components/SeoHead.astro";
+
+// Fetch all product handles for static paths
 
 export async function getStaticPaths() {
   const data = await shopifyFetch(GET_PRODUCT_HANDLES);
@@ -24,6 +27,12 @@ const data = await shopifyFetch(GET_PRODUCT_BY_HANDLE, { handle });
 const product = data.productByHandle;
 ---
 
+<SeoHead
+  title={`${product.title} | Shopify Demo`}
+  description={`Shop ${product.title} — now available.`}
+  ogImage={product.images?.[0]?.url || "/og-default.jpg"}
+  url={`/products/${product.handle}`}
+/>
 <DefaultLayout title={`${product.title} | Shopify Starter`}>
   <article class="product-detail max-w-6xl mx-auto px-4 py-10">
     <div class="mb-6">
