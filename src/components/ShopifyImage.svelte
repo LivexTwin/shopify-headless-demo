@@ -13,6 +13,8 @@
 
   const srcSetWidths = [100, 200, 400, 600, 800, 1000, 1200, 1600];
 
+// image = null;
+
  
   function formatWebpUrl(baseUrl: string, width?: number) {
     const url = new URL(baseUrl);
@@ -30,9 +32,14 @@
       .join(", ");
   }
 
-  function getMainSrc() {
-    return formatWebpUrl(image?.url || "");
-  }
+function getMainSrc() {
+  if (!image?.url) return undefined;
+  return formatWebpUrl(image.url);
+
+  
+}
+
+
 </script>
 
 {#if image}
