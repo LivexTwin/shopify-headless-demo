@@ -1,5 +1,6 @@
 // src/stores/cart.ts
 import { persistentAtom } from "@nanostores/persistent";
+import { atom } from "nanostores";
 
 export const cartId = persistentAtom<string | null>(
   "cartId", // key in localStorage
@@ -7,14 +8,12 @@ export const cartId = persistentAtom<string | null>(
   {
     encode: JSON.stringify,
     decode: JSON.parse,
-  }
+  },
 );
 
-export const cart = persistentAtom<any>(
-  "cartData",
-  { lines: [] },
-  {
-    encode: JSON.stringify,
-    decode: JSON.parse,
-  }
-);
+export const cart = atom<any>({
+  id: null,
+  lines: [],
+  cost: {},
+  checkoutUrl: null,
+});

@@ -1,49 +1,32 @@
-<!-- src/components/Cart/CartView.svelte -->
 <script>
-  import { onMount } from 'svelte';
+  import { updateCartLine, removeCartLine } from '@lib/cartActions.ts';
   import { cart } from '@stores/cart.ts';
-  import { getCart, updateCartLine, removeCartLine, } from '@lib/cartService.ts';
+
   import CartContents from './CartContents.svelte';
   import Spinner from '@components/Spinner.svelte';
 
   let loading = false;
 
-  
-  
-  onMount(async () => {
-    if ($cart?.id) {
-      const updated = await getCart($cart.id);
-      if (updated) {
-        cart.set(updated);
-      }
-    }
-  });
 
   async function updateQuantity(lineId, quantity) {
     loading = true;
-    if (quantity < 1) {
-      await removeLine(lineId);
+
+    try {
+      if (quantity < 1) {
+        await removeCartLine(lineId);
+      } else {
+        await updateCartLine(lineId, quantity);
+      }
+    } finally {
       loading = false;
-      return;
     }
-    const updated = await updateCartLine($cart.id, lineId, quantity);
-    if (updated) {
-      const full = await getCart($cart.id);
-      if (full) cart.set(full);
-    }
-    loading = false;
   }
 
   async function removeLine(lineId) {
-    const updated = await removeCartLine($cart.id, lineId);
-    if (updated) {
-      const full = await getCart($cart.id);
-      if (full) cart.set(full);
-    }
+    loading = true;
+    await removeCartLine(lineId);
+    loading = false;
   }
-
-
-  
 </script>
 
 <div class="max-w-4xl mx-auto p-4">

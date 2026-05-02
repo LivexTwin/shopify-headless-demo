@@ -1,7 +1,6 @@
 <script>
   import { isCompletelySoldOut, isOnlyOneLeft } from "@utils/product";
-  import { cart, cartId } from "@stores/cart";
-  import { createCart, addToCart } from "@lib/cartService";
+  import { addToCart } from "@lib/cartActions";
   import Spinner from "@components/Spinner.svelte";
 
   export let variants = [];
@@ -14,31 +13,17 @@
   $: selectedVariant = variants.find((v) => v.id === variantId);
   $: onlyOneLeft = isOnlyOneLeft(selectedVariant);
 
+async function handleAddToCart() {
+  if (soldOut || loading) return;
 
-  async function handleAddToCart() {
-    if (soldOut || loading) return;
-    loading = true;
+  loading = true;
 
-    try {
-      let id = $cartId;
-      if (!id) {
-        const newCart = await createCart();
-        if (!newCart) return;
-        cartId.set(newCart.id);
-        cart.set(newCart);
-        id = newCart.id;
-      }
-
-      const updatedCart = await addToCart(id, variantId, 1);
-      // Simulate a delay to show loading state
-        await new Promise((resolve) => setTimeout(resolve, 400));
-      if (updatedCart) {
-        cart.set(updatedCart);
-      }
-    } finally {
-      loading = false;
-    }
-  }
+ try {
+  await addToCart(variantId, 1);
+} finally {
+  loading = false;
+}
+}
 </script>
 
 {#if onlyOneLeft && !soldOut}

@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css";
 import "../styles/layout.css";
+import CartProvider from "../components/Cart/CartProvider.svelte";
 import TheNavigation from "../components/TheNavigation.astro";
 import TheFooter from "../components/TheFooter.astro";
 import SeoHead from "@components/SeoHead.astro";
@@ -17,6 +18,7 @@ import SeoHead from "@components/SeoHead.astro";
 
   <body>
     <div id="site">
+      <CartProvider client:load />
       <header class="sticky top-0 z-50 bg-white border-b border-gray-200">
         <TheNavigation />
       </header>
