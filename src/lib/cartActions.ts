@@ -1,6 +1,6 @@
 import { cartId, cart } from "../stores/cart";
 import {
-  getCart,
+  getCart as apiGetCart,
   createCart,
   addToCart as apiAdd,
   updateCartLine as apiUpdate,
@@ -31,6 +31,11 @@ async function resolveCartId(): Promise<string> {
 
   return existing.id;
 }
+
+/**
+ * 🟢 SAFE GET CART (UI-safe wrapper)
+ */
+export const getCart = apiGetCart;
 
 /**
  * SINGLE SOURCE OF TRUTH

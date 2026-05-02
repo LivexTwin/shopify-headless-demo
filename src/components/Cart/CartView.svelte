@@ -1,11 +1,14 @@
 <script>
-  import { updateCartLine, removeCartLine } from '@lib/cartActions.ts';
+
+console.log("CartView mounted");
+  import { updateCartLine, removeCartLine, getCart } from '@lib/cartActions.ts';
   import { cart } from '@stores/cart.ts';
 
   import CartContents from './CartContents.svelte';
   import Spinner from '@components/Spinner.svelte';
 
   let loading = false;
+
 
 
   async function updateQuantity(lineId, quantity) {
@@ -27,6 +30,28 @@
     await removeCartLine(lineId);
     loading = false;
   }
+
+
+    async function goToCheckout() {
+    const current = $cart;
+  console.log("CLICK FIRED");
+    if (!current?.id) {
+      console.error("No cart available");
+      return;
+    }
+
+    const fresh = await getCart(current.id);
+
+      console.log("fresh cart:", fresh);
+  console.log("checkoutUrl:", fresh?.checkoutUrl);
+
+    if (!fresh?.checkoutUrl) {
+      console.error("Checkout URL missing");
+      return;
+    }
+
+    window.location.href = fresh.checkoutUrl;
+  }
 </script>
 
 <div class="max-w-4xl mx-auto p-4">
@@ -46,17 +71,16 @@
     </p>
 
 
-    
-    {#if $cart?.checkoutUrl}
-      <button
-        class="mt-4 bg-black text-white py-2 px-4 rounded hover:bg-gray-800 transition"
-        on:click={() => window.location.href = $cart.checkoutUrl}
-      >
-        Proceed to Checkout
-      </button>
-    {:else}
-      <p>No checkout available</p>
-    {/if}
+{#if $cart?.id}
+  <button
+    class="mt-4 bg-black text-white py-2 px-4 rounded hover:bg-gray-800 transition"
+    on:click={goToCheckout}
+  >
+    Proceed to Checkout
+  </button>
+{:else}
+  <p>No checkout available</p>
+{/if}
   {:else}
     <div class="text-center py-10">
       <p class="mb-4">Your cart is empty.</p>
