@@ -4,7 +4,9 @@ const { product, eager = false } = Astro.props;
 import ShopifyImage from "../ShopifyImage.svelte";
 import Money from "../Money.svelte";
 import SoldOut from "./SoldOut.svelte";
-const featuredImage = product.images?.[0];
+import { normalizeProductImage } from "../../lib/normalizeProductImage";
+
+const featuredImage = normalizeProductImage(product);
 ---
 
 <article
@@ -16,14 +18,7 @@ const featuredImage = product.images?.[0];
         class="w-full h-full transition-transform duration-300 group-hover:scale-105 rounded-lg overflow-hidden"
       >
         <ShopifyImage
-          image={featuredImage
-            ? {
-                url: featuredImage.url,
-                altText: featuredImage.altText || product.title,
-                width: 300,
-                height: 300,
-              }
-            : null}
+          image={featuredImage}
           loading={eager ? "eager" : "lazy"}
           classList="w-full h-full object-cover"
           sizes="(max-width: 600px) 100vw, 300px"

@@ -1,6 +1,4 @@
 <script>
-
-console.log("CartView mounted");
   import { updateCartLine, removeCartLine, getCart } from '@lib/cartActions.ts';
   import { cart } from '@stores/cart.ts';
 
@@ -34,7 +32,6 @@ console.log("CartView mounted");
 
     async function goToCheckout() {
     const current = $cart;
-  console.log("CLICK FIRED");
     if (!current?.id) {
       console.error("No cart available");
       return;
@@ -42,8 +39,6 @@ console.log("CartView mounted");
 
     const fresh = await getCart(current.id);
 
-      console.log("fresh cart:", fresh);
-  console.log("checkoutUrl:", fresh?.checkoutUrl);
 
     if (!fresh?.checkoutUrl) {
       console.error("Checkout URL missing");
