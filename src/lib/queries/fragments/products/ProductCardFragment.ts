@@ -4,7 +4,7 @@ fragment ProductCardFragment on Product {
   title
   handle
   availableForSale
-  images(first: 1) {
+  images(first: 2) {
     edges {
       node {
         url
@@ -14,6 +14,7 @@ fragment ProductCardFragment on Product {
       }
     }
   }
+
   variants(first: 10) {
     edges {
       node {

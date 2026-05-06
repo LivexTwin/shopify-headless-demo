@@ -1,19 +1,28 @@
 ---
 import DefaultLayout from "../../layouts/DefaultLayout.astro";
-import { shopifyFetch } from "@lib/shopify.js";
-import {
-  GET_PRODUCT_BY_HANDLE,
-  GET_PRODUCT_HANDLES,
-} from "@lib/queries/products.ts";
-import ProductDetail from "@components/Product/ProductDetail.svelte";
-import ProductReviews from "@components/Product/ProductReviews.astro";
-import BreadCrumb from "@components/Product/BreadCrumb.astro";
-import ProductImageGallery from "@components/Product/ProductImageGallery.svelte";
 import SeoHead from "@components/SeoHead.astro";
 
-// Fetch all product handles for static paths
+const product = {
+  title: "INTENT",
+  price: "55",
+  images: [
+    "/placeholder-product.jpg",
+    "/placeholder-back.jpg",
+    "/placeholder-detail.jpg",
+  ],
+};
 
 export async function getStaticPaths() {
+  const USE_MOCK = true;
+
+  if (USE_MOCK) {
+    return [
+      {
+        params: { handle: "intent" },
+      },
+    ];
+  }
+
   const data = await shopifyFetch(GET_PRODUCT_HANDLES);
   const products = data.products;
 
@@ -21,40 +30,52 @@ export async function getStaticPaths() {
     params: { handle: product.handle },
   }));
 }
-
-const { handle } = Astro.params;
-const data = await shopifyFetch(GET_PRODUCT_BY_HANDLE, { handle });
-const product = data.productByHandle;
 ---
 
 <SeoHead
-  title={`${product.title} | Shopify Demo`}
-  description={`Shop ${product.title} — now available.`}
-  ogImage={product.images?.[0]?.url || "/og-default.jpg"}
-  url={`/products/${product.handle}`}
+  title={`${product.title} | MALYXIA`}
+  description={`Shop ${product.title}`}
 />
-<DefaultLayout title={`${product.title} | Shopify Starter`}>
-  <article class="product-detail max-w-6xl mx-auto px-4 py-10">
-    <div class="mb-6">
-      <BreadCrumb title={product.title} />
+
+<DefaultLayout>
+  <!-- HERO STRIP -->
+  <section class="max-w-6xl mx-auto px-6 pt-24 pb-12">
+    <p class="text-xs uppercase tracking-widest opacity-50 mb-4">Chapter 1</p>
+
+    <h1 class="text-4xl md:text-6xl font-bold tracking-tight">
+      {product.title}
+    </h1>
+
+    <p class="mt-4 text-sm opacity-60">
+      ${product.price}
+    </p>
+  </section>
+
+  <!-- IMAGE LAYOUT TEST AREA -->
+  <section class="max-w-6xl mx-auto px-6 grid lg:grid-cols-2 gap-6">
+    <div class="lg:col-span-2">
+      <img src={product.images[0]} class="w-full object-cover" />
     </div>
 
-    <div class="flex flex-col lg:flex-row gap-10">
-      <!-- ✅ SSR image gallery -->
-      <div class="lg:w-1/2">
-        <ProductImageGallery
-          client:load
-          images={product.images}
-          altBase={product.title}
-        />
-      </div>
+    <img src={product.images[1]} class="w-full object-cover" />
 
-      <!-- ✅ Svelte client-only logic -->
-      <div class="lg:w-1/2 mt-6 lg:mt-0">
-        <ProductDetail client:only="svelte" product={product} />
-      </div>
-    </div>
-  </article>
+    <img src={product.images[2]} class="w-full object-cover" />
+  </section>
 
-  <ProductReviews />
+  <!-- TEXT BLOCK -->
+  <section class="max-w-3xl mx-auto px-6 py-20">
+    <p class="text-sm opacity-70 leading-relaxed">
+      A study in intent. Limited production garment. Built for controlled
+      release.
+    </p>
+  </section>
+
+  <!-- CTA -->
+  <section class="max-w-3xl mx-auto px-6 pb-32">
+    <button
+      class="w-full border border-black py-3 text-sm uppercase tracking-wide"
+    >
+      Add to Cart
+    </button>
+  </section>
 </DefaultLayout>
