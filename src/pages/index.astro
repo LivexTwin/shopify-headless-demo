@@ -2,18 +2,14 @@
 import DefaultLayout from "../layouts/DefaultLayout.astro";
 import { shopifyFetch } from "../lib/shopify.ts";
 import { GET_DROP_PRODUCT } from "../lib/queries/products.ts";
-import { normalizeProductImages } from "../lib/normalizeProductImages.ts";
+import Money from "../components/Money.svelte";
 import SeoHead from "../components/SeoHead.astro";
 import ProductMediaGallery from "../components/Product/ProductMediaGallery.svelte";
+import ProductPurchaseBlock from "../components/Product/ProductPurchaseBlock.svelte";
 
 const data = await shopifyFetch(GET_DROP_PRODUCT);
 
-const rawProduct = data.products.nodes[0];
-
-const product = {
-  ...rawProduct,
-  images: normalizeProductImages(rawProduct),
-};
+const product = data.products.nodes[0];
 ---
 
 <SeoHead title="MALYXIA — Chapter 1" />
@@ -45,28 +41,9 @@ const product = {
           variant="compact"
         />
       </div>
-      <!-- INFO -->
-      <div class="w-full md:w-1/2">
-        <h2 class="text-xl font-semibold">{product.title}</h2>
-        <p class="mt-2 text-lg">${product.price}</p>
-        <!-- SIZE SELECT -->
-        <div class="mt-6">
-          <label class="block text-xs mb-2 uppercase tracking-wide">
-            Size
-          </label>
-          <select class="w-full border p-2 text-sm">
-            <option>S</option>
-            <option>M</option>
-            <option>L</option>
-            <option>XL</option>
-          </select>
-        </div>
-        <!-- CTA -->
-        <button
-          class="mt-6 w-full border border-black py-3 text-sm uppercase tracking-wide"
-        >
-          Add to Cart
-        </button>
+      <!-- Product Purchase Block -->
+      <div class="w-100">
+        <ProductPurchaseBlock client:only="svelte" product={product} />
       </div>
     </div>
   </section>

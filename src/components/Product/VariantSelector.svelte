@@ -1,12 +1,13 @@
 <script>
   import { onMount } from 'svelte';
   import { createVariantSelector } from "@utils/useVariantSelector";
-  import Money from '../Money.svelte';
+ 
 
 
   export let variants = [];
   export let onSelect;
   export let productId;
+
 
   let selector;
   let optionNames = [];
@@ -67,16 +68,19 @@ export function updateUrlWithVariant(variantId) {
   }
   window.history.replaceState({}, '', url);
 }
+
 </script>
 
-<fieldset class="space-y-6">
+
+
+<fieldset class="mt-6 space-y-6">
   <legend class="sr-only">Select product options</legend>
 
   {#each optionNames as optionName}
     <div class="flex flex-col gap-1">
       <label
         for={optionName}
-        class="text-sm font-medium text-gray-800"
+       class="block text-xs mb-2 uppercase tracking-wide text-black"
       >
         {optionName}
       </label>
@@ -87,7 +91,7 @@ export function updateUrlWithVariant(variantId) {
           bind:value={selectedOptions[optionName]}
           on:change={(e) => handleOptionChange(optionName, e)}
           aria-describedby={`${optionName}-desc`}
-          class="rounded-lg border border-gray-300 focus:ring focus:ring-black/10 focus:outline-none p-3 bg-white text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+        class="w-full border border-black p-2 text-sm uppercase tracking-wide bg-white focus:outline-none"
         >
           {#each Array.from(new Set(
             variants.map(v =>
@@ -114,6 +118,5 @@ export function updateUrlWithVariant(variantId) {
   {/each}
 </fieldset>
 
-  <div class="text-lg font-semibold text-gray-900 pt-4 mb-4">
-  <Money amount={selectedVariant?.price?.amount} currencyCode={selectedVariant?.price?.currencyCode} />
-  </div>
+
+

@@ -37,9 +37,7 @@ async function handleAddToCart() {
   aria-live="polite"
   aria-label={soldOut ? "Product is sold out" : "Add product to cart"}
   type="button"
-  class="w-full min-h-12  px-6 py-3 text-white font-semibold text-center rounded-md transition duration-300
-         disabled:bg-gray-300 disabled:text-gray-600 disabled:cursor-not-allowed
-         bg-black hover:bg-gray-900 flex items-center justify-center gap-2"
+   class="mt-6 w-full border border-black py-3 text-sm uppercase tracking-wide"
 >
   {#if loading}
     <Spinner size={20} />

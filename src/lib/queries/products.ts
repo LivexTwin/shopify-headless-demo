@@ -1,6 +1,6 @@
 import { PRODUCT_CARD_FRAGMENT } from "./fragments/products/ProductCardFragment.ts";
 import { PRODUCT_DETAIL_FRAGMENT } from "./fragments/products/ProductDetailFragment.ts";
-import { PRODUCT_DROP_FRAGMENT } from "./fragments/ProductDropFragment.ts";
+import { PRODUCT_DROP_FRAGMENT } from "./fragments/products/ProductDropFragment.ts";
 
 export const GET_PRODUCTS = `
   ${PRODUCT_CARD_FRAGMENT}
