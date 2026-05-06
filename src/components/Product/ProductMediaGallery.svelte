@@ -7,15 +7,18 @@ import ShopifyImage from "@components/ShopifyImage.svelte";
 
   let index = 0;
 
-  function next() {
-    if (index < images.length - 1) index += 1;
-  }
+function next() {
 
-  function prev() {
-    if (index > 0) index -= 1;
-  }
+  if (index < images.length - 1) index += 1;
+}
 
-  $: active = images?.[index];
+function prev() {
+
+  if (index > 0) index -= 1;
+}
+
+
+  
 
 
 </script>
@@ -23,17 +26,20 @@ import ShopifyImage from "@components/ShopifyImage.svelte";
 {#if variant === "compact"}
   <div class="relative aspect-square w-full overflow-hidden">
 
-    <ShopifyImage
-      image={active ? {
-        url: active.url,
-        altText: active.altText || altBase,
-        width: 800,
-        height: 800
-      } : null}
-      classList="absolute inset-0 w-full h-full object-cover"
-    />
-
-    <p class="text-xs">{images?.length}</p>
+{#key index}
+  <ShopifyImage
+    image={images[index] ? {
+      url: images[index].url,
+      altText: images[index].altText || altBase,
+      width: 800,
+      height: 800
+    } : null}
+    classList="absolute inset-0 w-full h-full object-cover"
+  />
+{/key}
+<p class="absolute bottom-2 right-2 text-[11px] opacity-50 tracking-wider">
+  {index + 1} / {images.length}
+</p>
 
     <!-- minimal controls -->
     {#if images.length > 1}

@@ -1,36 +1,21 @@
 ---
 import DefaultLayout from "../layouts/DefaultLayout.astro";
 import { shopifyFetch } from "../lib/shopify.ts";
-import { GET_PRODUCTS } from "../lib/queries/products.ts";
+import { GET_DROP_PRODUCT } from "../lib/queries/products.ts";
+import { normalizeProductImages } from "../lib/normalizeProductImages.ts";
 import SeoHead from "../components/SeoHead.astro";
 import ProductMediaGallery from "../components/Product/ProductMediaGallery.svelte";
 
-const data = await shopifyFetch(GET_PRODUCTS);
-const product = data.products[0]; // still fine for single-drop setup
-console.log("PRODUCT IMAGES RAW:", product.images);
+const data = await shopifyFetch(GET_DROP_PRODUCT);
+
+const rawProduct = data.products.nodes[0];
+
+const product = {
+  ...rawProduct,
+  images: normalizeProductImages(rawProduct),
+};
 ---
 
-<!-- ---
-import DefaultLayout from "../layouts/DefaultLayout.astro";
-import { shopifyFetch } from "../lib/shopify.ts";
-import { GET_PRODUCTS } from "../lib/queries/products.ts";
-import ProductList from "../components/Product/ProductList.astro";
-import SeoHead from "../components/SeoHead.astro";
-
-const data = await shopifyFetch(GET_PRODUCTS);
-const products = data.products;
-
-// console.log("Products fetched:", products); // Uncomment for debugging
----
-
-<SeoHead title="Home | Shopify Headless Demo" />
-<DefaultLayout>
-  <h1 class="text-2xl font-bold mt-4 mb-6 text-center text-balance">
-    Shopify + Astro + Svelte 🚀 Demo Store
-  </h1>
-
-  <ProductList products={products} />
-</DefaultLayout> -->
 <SeoHead title="MALYXIA — Chapter 1" />
 <DefaultLayout>
   <!-- HERO -->
@@ -54,6 +39,7 @@ const products = data.products;
       <!-- FRONT AND BACK SLIDER -->
       <div class="w-full md:w-1/2">
         <ProductMediaGallery
+          client:load
           images={product.images}
           altBase={product.title}
           variant="compact"
