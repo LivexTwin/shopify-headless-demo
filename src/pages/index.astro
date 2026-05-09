@@ -2,7 +2,7 @@
 import DefaultLayout from "../layouts/DefaultLayout.astro";
 import { shopifyFetch } from "../lib/shopify.ts";
 import { GET_DROP_PRODUCT } from "../lib/queries/products.ts";
-import Money from "../components/Money.svelte";
+
 import SeoHead from "../components/SeoHead.astro";
 import ProductMediaGallery from "../components/Product/ProductMediaGallery.svelte";
 import ProductPurchaseBlock from "../components/Product/ProductPurchaseBlock.svelte";
@@ -41,8 +41,14 @@ const product = data.products.nodes[0];
           variant="compact"
         />
       </div>
-      <!-- Product Purchase Block -->
+      <!-- INFO -->
+
       <div class="w-100">
+        <a href={`/products/${product.handle}`}>
+          <h2 class="text-xl font-semibold">{product.title}</h2>
+        </a>
+
+        <!-- Product Purchase Block -->
         <ProductPurchaseBlock client:only="svelte" product={product} />
       </div>
     </div>

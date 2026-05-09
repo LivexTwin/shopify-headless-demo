@@ -1,28 +1,17 @@
 ---
 import DefaultLayout from "../../layouts/DefaultLayout.astro";
 import SeoHead from "@components/SeoHead.astro";
+import { shopifyFetch } from "@lib/shopify";
+import {
+  GET_PRODUCT_BY_HANDLE,
+  GET_PRODUCT_HANDLES,
+} from "@lib/queries/products.ts";
 
-const product = {
-  title: "INTENT",
-  price: "55",
-  images: [
-    "/placeholder-product.jpg",
-    "/placeholder-back.jpg",
-    "/placeholder-detail.jpg",
-  ],
-};
+import ProductMediaGallery from "@components/Product/ProductMediaGallery.svelte";
+import ProductPurchaseBlock from "@components/Product/ProductPurchaseBlock.svelte";
+import ProductInfoBlock from "@components/Product/ProductInfoBlock.astro";
 
 export async function getStaticPaths() {
-  const USE_MOCK = true;
-
-  if (USE_MOCK) {
-    return [
-      {
-        params: { handle: "intent" },
-      },
-    ];
-  }
-
   const data = await shopifyFetch(GET_PRODUCT_HANDLES);
   const products = data.products;
 
@@ -30,6 +19,11 @@ export async function getStaticPaths() {
     params: { handle: product.handle },
   }));
 }
+
+const { handle } = Astro.params;
+
+const data = await shopifyFetch(GET_PRODUCT_BY_HANDLE, { handle });
+const product = data.productByHandle;
 ---
 
 <SeoHead
@@ -38,44 +32,38 @@ export async function getStaticPaths() {
 />
 
 <DefaultLayout>
-  <!-- HERO STRIP -->
-  <section class="max-w-6xl mx-auto px-6 pt-24 pb-12">
-    <p class="text-xs uppercase tracking-widest opacity-50 mb-4">Chapter 1</p>
+  <div class="relative z-10 min-h-screen">
+    <!-- FIXED REMOVING ITEMS START ^ NOW WORKS!! -->
+    <div class="lg:flex lg:gap-12">
+      <!-- FIXED REMOVING ITEMS START ^ NOW WORKS!! -->
+      <!-- LEFT: MEDIA -->
+      <div class="flex-1">
+        <div class="block lg:hidden">
+          <ProductMediaGallery
+            client:load
+            variant="swipe"
+            images={product.images}
+          />
+        </div>
+        <div class="hidden lg:block">
+          <ProductMediaGallery
+            client:load
+            variant="editorial"
+            images={[...product.images, ...product.images]}
+          />
+        </div>
+      </div>
 
-    <h1 class="text-4xl md:text-6xl font-bold tracking-tight">
-      {product.title}
-    </h1>
-
-    <p class="mt-4 text-sm opacity-60">
-      ${product.price}
-    </p>
-  </section>
-
-  <!-- IMAGE LAYOUT TEST AREA -->
-  <section class="max-w-6xl mx-auto px-6 grid lg:grid-cols-2 gap-6">
-    <div class="lg:col-span-2">
-      <img src={product.images[0]} class="w-full object-cover" />
+      <!-- RIGHT: STICKY INFO -->
+      <div class="relative flex flex-col w-[500px]">
+        <div class="flex-1"></div>
+        <div class="lg:sticky lg:bottom-1">
+          <div class="space-y-8 p-5">
+            <ProductInfoBlock product={product} />
+            <ProductPurchaseBlock client:only="svelte" product={product} />
+          </div>
+        </div>
+      </div>
     </div>
-
-    <img src={product.images[1]} class="w-full object-cover" />
-
-    <img src={product.images[2]} class="w-full object-cover" />
-  </section>
-
-  <!-- TEXT BLOCK -->
-  <section class="max-w-3xl mx-auto px-6 py-20">
-    <p class="text-sm opacity-70 leading-relaxed">
-      A study in intent. Limited production garment. Built for controlled
-      release.
-    </p>
-  </section>
-
-  <!-- CTA -->
-  <section class="max-w-3xl mx-auto px-6 pb-32">
-    <button
-      class="w-full border border-black py-3 text-sm uppercase tracking-wide"
-    >
-      Add to Cart
-    </button>
-  </section>
+  </div>
 </DefaultLayout>

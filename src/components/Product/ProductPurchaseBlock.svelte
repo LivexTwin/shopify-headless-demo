@@ -17,7 +17,7 @@ import Money from "../Money.svelte";
 
 <div class="space-y-4">
 
-  <h2 class="text-xl font-semibold">{product.title}</h2>
+
 
   <Money
     amount={selectedVariant.price.amount}
