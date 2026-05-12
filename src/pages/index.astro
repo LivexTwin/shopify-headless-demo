@@ -2,6 +2,7 @@
 import DefaultLayout from "../layouts/DefaultLayout.astro";
 import { shopifyFetch } from "../lib/shopify.ts";
 import { GET_DROP_PRODUCT } from "../lib/queries/products.ts";
+import QuickAdd from "../lib/components/QuickAdd.svelte";
 
 import SeoHead from "../components/SeoHead.astro";
 import ProductMediaGallery from "../components/Product/ProductMediaGallery.svelte";
@@ -49,7 +50,11 @@ const product = data.products.nodes[0];
         </a>
 
         <!-- Product Purchase Block -->
-        <ProductPurchaseBlock client:only="svelte" product={product} />
+        <ProductPurchaseBlock
+          client:only="svelte"
+          product={product}
+          mode="quick"
+        />
       </div>
     </div>
   </section>

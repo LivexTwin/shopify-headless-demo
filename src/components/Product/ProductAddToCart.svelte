@@ -15,6 +15,7 @@
 
 async function handleAddToCart() {
   if (soldOut || loading) return;
+  
 
   loading = true;
 

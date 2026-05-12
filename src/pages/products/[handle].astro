@@ -60,7 +60,11 @@ const product = data.productByHandle;
         <div class="lg:sticky lg:bottom-1">
           <div class="space-y-8 p-5">
             <ProductInfoBlock product={product} />
-            <ProductPurchaseBlock client:only="svelte" product={product} />
+            <ProductPurchaseBlock
+              client:only="svelte"
+              product={product}
+              mode="detail"
+            />
           </div>
         </div>
       </div>
