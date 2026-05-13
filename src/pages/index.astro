@@ -46,7 +46,7 @@ const product = data.products.nodes[0];
 
       <div class="w-100">
         <a href={`/products/${product.handle}`}>
-          <h2 class="text-xl font-semibold">{product.title}</h2>
+          <h2>{product.title}</h2>
         </a>
 
         <!-- Product Purchase Block -->
@@ -55,6 +55,13 @@ const product = data.products.nodes[0];
           product={product}
           mode="quick"
         />
+
+        <a
+          class="text-xs underline text-gray-400 uppercase tracking-wider"
+          href={`/products/${product.handle}`}
+        >
+          Full View
+        </a>
       </div>
     </div>
   </section>

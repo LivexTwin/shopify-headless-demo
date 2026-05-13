@@ -1,24 +1,17 @@
 ---
 // ProductInfoBlock.astro
-// import Money from "../Money.svelte";
 
-const { product, selectedVariant } = Astro.props;
+const { product } = Astro.props;
 ---
 
-<div class="space-y-6">
+<div class="space-y-3">
   <!-- TITLE -->
-  <h1 class="text-xl font-semibold tracking-tight">
+  <h1 class="tracking-tight uppercase">
     {product.title}
   </h1>
 
   <!-- DESCRIPTION -->
-  <div class="text-sm leading-relaxed opacity-80 space-y-3">
+  <div class="text-sm leading-4 opacity-80">
     <Fragment set:html={product.descriptionHtml} />
   </div>
-
-  <!-- PRICE -->
-  <!-- <Money
-    amount={selectedVariant.price.amount}
-    currencyCode={selectedVariant.price.currencyCode}
-  /> -->
 </div>

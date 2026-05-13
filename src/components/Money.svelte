@@ -2,11 +2,19 @@
   export let amount: string | number;
   export let currencyCode: string = 'USD'; // fallback default
 
-  $: formatted = new Intl.NumberFormat('en-US', {
+  $: formattedParts = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: currencyCode,
     currencyDisplay: 'symbol',
-  }).format(Number(amount));
+  }).formatToParts(Number(amount));
 </script>
 
-<span>{formatted}</span>
+<span class="text-sm">
+  {#each formattedParts as part}
+    {#if part.type === 'currency'}
+      <span style="font-size: 0.5em; vertical-align: middle; ">{part.value}</span>
+    {:else}
+      {part.value}
+    {/if}
+  {/each}
+</span>

@@ -34,23 +34,27 @@
   $: onSelect?.($selectedVariant ?? null);
 </script>
 
-<div class="flex gap-2 flex-wrap">
-  {#each getOptionValues("Size") as size}
-    <button
-      type="button"
-      on:click={() => updateOption("Size", size)}
-      disabled={!hasAvailableVariant("Size", size)}
-      class:bg-black={$selectedOptions.Size === size}
-      class:text-white={$selectedOptions.Size === size}
-      class:opacity-40={!hasAvailableVariant("Size", size)}
-    >
-      {size}
-    </button>
 
+
+<div class=" flex flex-col pt-2">
+  <span class="text-xs font-medium text-gray-400 uppercase tracking-widest">Size</span>
+  <div class="flex gap-1.5">
+      {#each getOptionValues("Size") as size}
+        <button
     
-  {/each}
+          type="button"
+          on:click={() => updateOption("Size", size)}
+          disabled={!hasAvailableVariant("Size", size)}
+          class:underline={$selectedOptions.Size === size}
+          class:opacity-40={!hasAvailableVariant("Size", size)}
+          class=" text-xs hover:underline"
+        >
+          {size}
+        </button>
+      
+      {/each}
+  </div>
 
-  
 </div>
 
 
@@ -59,7 +63,7 @@
 <button
   type="button"
   on:click={() => updateOption("Color", color)}
-  class="w-6 h-6 rounded-full border"
+  class="w-3 h-3 rounded-xs border"
   class:opacity-40={!hasAvailableVariant("Color", color)}
   aria-label={color}
 >

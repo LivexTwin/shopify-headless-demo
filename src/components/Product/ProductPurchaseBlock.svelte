@@ -25,33 +25,58 @@
   $: canAddToCart = !!selectedVariant?.id;
 </script>
 
-<div class="space-y-4">
 
-  <!-- 💰 PRICE -->
- {#if displayVariant?.price}
-  <Money
-    amount={displayVariant.price.amount}
-    currencyCode={displayVariant.price.currencyCode}
-  />
-{/if}
-  <!-- 🧠 VARIANT UI (mode decides behavior) -->
-  {#if mode === "quick"}
+{#if mode === "quick"}
+
+  <div class="space-y-4">
+
+    {#if displayVariant?.price}
+      <Money
+        amount={displayVariant.price.amount}
+        currencyCode={displayVariant.price.currencyCode}
+      />
+    {/if}
+
     <QuickAdd
       {product}
       onSelect={handleSelect}
     />
-  {:else}
-    <DetailSelector
-      {product}
-      onSelect={handleSelect}
+
+    <ProductAddToCart
+      disabled={!canAddToCart}
+      variantId={selectedVariant?.id}
+      quantityAvailable={selectedVariant?.quantityAvailable || 0}
     />
-  {/if}
 
-  <!-- 🛒 CART -->
-<ProductAddToCart
-  disabled={!canAddToCart}
-  variantId={selectedVariant?.id}
-  quantityAvailable={selectedVariant?.quantityAvailable || 0}
-/>
+  </div>
 
-</div>
+{:else}
+
+  <div class="space-y-6">
+
+    {#if displayVariant?.price}
+      <Money
+        amount={displayVariant.price.amount}
+        currencyCode={displayVariant.price.currencyCode}
+      />
+    {/if}
+
+    <!-- DETAIL LAYOUT -->
+    <div class="flex flex-wrap items-center gap-1 pt-3.5">
+
+      <DetailSelector
+        {product}
+        onSelect={handleSelect}
+      />
+
+      <ProductAddToCart
+        disabled={!canAddToCart}
+        variantId={selectedVariant?.id}
+        quantityAvailable={selectedVariant?.quantityAvailable || 0}
+      />
+
+    </div>
+
+  </div>
+
+{/if}

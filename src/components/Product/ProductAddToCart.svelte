@@ -38,7 +38,7 @@ async function handleAddToCart() {
   aria-live="polite"
   aria-label={soldOut ? "Product is sold out" : "Add product to cart"}
   type="button"
-   class="mt-6 w-full border border-black py-3 text-sm uppercase tracking-wide"
+   class=" bg-neutral-500 min-w-28 rounded-xs  text-white  py-0.75 text-xs uppercase tracking-wide"
 >
   {#if loading}
     <Spinner size={20} />
@@ -48,6 +48,6 @@ async function handleAddToCart() {
         d="M18.364 5.636a9 9 0 11-12.728 12.728 9 9 0 0112.728-12.728zM6.343 6.343l11.314 11.314" />
     </svg>
   {:else}
-    Add to Cart
+   + Add to Cart
   {/if}
 </button>
