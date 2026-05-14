@@ -1,73 +1,50 @@
 <script>
-  import { createVariantSelector } from "@lib/variants/useVariantSelector";
-  import { resolveInitialOptions } from "@lib/variants/resolveInitialOptions";
-  import { readOptionsFromUrl } from "@lib/variants/useVariantUrlSync";
+  import ColorSwatch from "@lib/components/ColorSwatch.svelte";
 
   export let product;
-  export let onSelect;
+  export let selectedOptions = {};
+  export let updateOption;
+  export let getAvailableOptions;
+  export let hasAvailableOption;
 
-  const variants = product?.variants ?? [];
+  const colors =
+    product.options?.find((o) => o.name === "Color")?.optionValues ?? [];
 
-  const initialOptions = resolveInitialOptions(
-  variants,
-  readOptionsFromUrl(),
-  "detail"
-);
-
-  const {
-    selectedOptions,
-    selectedVariant,
-    updateOption,
-    getOptionValues,
-    hasAvailableVariant,
-
-  } = createVariantSelector(
-    variants,
-    initialOptions,
-    true
-  );
-
-  $: onSelect?.($selectedVariant ?? null);
+  $: sizeOptions = getAvailableOptions && selectedOptions
+    ? getAvailableOptions("Size")
+    : [];
 </script>
 
+<section class="flex items-center gap-2">
+  <div class="relative w-fit">
+    <div class="flex items-center justify-between bg-stone-300 px-2 py-0.75 text-xs uppercase tracking-widest min-w-[60px]">
+      <span>{selectedOptions.Size || "Size +"}</span>
+    </div>
 
-<section>
-<div class="relative w-fit">
+    <select
+      class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+      value={selectedOptions.Size || ""}
+     on:change={(e) => updateOption("Size", e.target.value)}
+    >
+    <option value="true" disabled selected>
+       -
+       </option>
 
-  <!-- VISIBLE UI -->
-  <div
-    class="
-      flex items-center justify-between
-      bg-stone-300 px-2 py-0.75
-      text-xs uppercase tracking-widest
-      cursor-pointer
-      min-w-[60px]
-    "
-  >
-    <span>
-      {$selectedOptions.Size || "Size +"}
-    </span>
+      {#each sizeOptions as size}
+        <option
+          value={size}
+          disabled={!sizeOptions.includes(size)}
+        >
+          {size}
+        </option>
+      {/each}
+    </select>
   </div>
 
-  <!-- REAL SELECT -->
-  <select
-    class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-    bind:value={$selectedOptions.Size}
-    on:change={(e) => updateOption("Size", e.target.value)}
-  >
-    <option value="" disabled>
-      -
-    </option>
-
-    {#each getOptionValues("Size") as size}
-      <option
-        value={size}
-        disabled={!hasAvailableVariant("Size", size)}
-      >
-        {size}
-      </option>
-    {/each}
-  </select>
-  
-</div>
+  <ColorSwatch
+    colors={colors}
+    selected={selectedOptions.Color}
+    onSelect={(c) => updateOption("Color", c)}
+    hasAvailableOption={hasAvailableOption}
+  />
 </section>

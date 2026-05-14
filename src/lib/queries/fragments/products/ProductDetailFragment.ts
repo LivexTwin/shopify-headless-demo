@@ -5,6 +5,36 @@ fragment ProductDetailFragment on Product {
   descriptionHtml
   handle
   availableForSale
+    options {
+    name
+    optionValues {
+      name
+      swatch {
+        color
+        image {
+          previewImage {
+            url
+          }
+        }
+      }
+    }
+  }
+
+  selectedOrFirstAvailableVariant {
+  id
+  selectedOptions {
+    name
+    value
+  }
+  price {
+    amount
+    currencyCode
+  }
+  availableForSale
+  quantityAvailable
+  }
+
+
   images(first: 10) {
     edges {
       node {

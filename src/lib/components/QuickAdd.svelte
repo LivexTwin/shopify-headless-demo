@@ -1,73 +1,62 @@
 <script>
-  import { createVariantSelector } from "@lib/variants/useVariantSelector";
-  import { resolveInitialOptions } from "@lib/variants/resolveInitialOptions";
-  import { readOptionsFromUrl } from "@lib/variants/useVariantUrlSync";
+  import ColorSwatch from "@lib/components/ColorSwatch.svelte";
 
   export let product;
+  export let selectedOptions = {};
+  export let selectedVariant = null;
+  export let updateOption;
+  export let getAvailableOptions;
+  export let hasAvailableOption;
   export let onSelect;
 
-  const variants = product?.variants ?? [];
+  const colors = product.options
+    ?.find((o) => o.name === "Color")
+    ?.optionValues ?? [];
 
-  
+  $: sizeOptions = getAvailableOptions && selectedOptions
+    ? getAvailableOptions("Size")
+    : [];
 
-  const initialOptions = resolveInitialOptions(
-  variants,
-  readOptionsFromUrl(),
-  "quick"
-  );
+  $: onSelect?.(selectedVariant);
 
-  const {
-    selectedOptions,
-    selectedVariant,
-    updateOption,
-    getOptionValues,
-    hasAvailableVariant,
+  function selectSize(size) {
+    updateOption?.("Size", size);
+  }
 
-  } = createVariantSelector(
-    variants,
-    initialOptions,
-    true
-  );
-
-
-
-  $: onSelect?.($selectedVariant ?? null);
+  function selectColor(color) {
+    updateOption?.("Color", color);
+  }
 </script>
 
 
 
 <div class=" flex flex-col pt-2">
-  <span class="text-xs font-medium text-gray-400 uppercase tracking-widest">Size</span>
+  <span class="text-xs  text-gray-400 uppercase tracking-wide pb-2">Size</span>
   <div class="flex gap-1.5">
-      {#each getOptionValues("Size") as size}
-        <button
-    
-          type="button"
-          on:click={() => updateOption("Size", size)}
-          disabled={!hasAvailableVariant("Size", size)}
-          class:underline={$selectedOptions.Size === size}
-          class:opacity-40={!hasAvailableVariant("Size", size)}
-          class=" text-xs hover:underline"
-        >
-          {size}
-        </button>
-      
-      {/each}
+    {#each sizeOptions as size}
+      <button
+        type="button"
+        on:click={() => selectSize(size)}
+        disabled={!hasAvailableOption("Size", size)}
+        class:underline={selectedOptions.Size === size}
+        class:opacity-40={!hasAvailableOption("Size", size)}
+        class=" text-xs hover:underline"
+      >
+        {size}
+      </button>
+    {/each}
   </div>
 
+  <span class="text-xs  text-gray-400 uppercase tracking-wide pb-2">Color</span>
+
+  <ColorSwatch
+    colors={colors}
+    selected={selectedOptions.Color}
+    onSelect={selectColor}
+    hasAvailableOption={(name, value) =>
+      getAvailableOptions?.(name)?.includes(value)
+    }
+  />
 </div>
 
 
-<div class="flex gap-2 flex-wrap">
-  {#each getOptionValues("Color") as color}
-<button
-  type="button"
-  on:click={() => updateOption("Color", color)}
-  class="w-3 h-3 rounded-xs border"
-  class:opacity-40={!hasAvailableVariant("Color", color)}
-  aria-label={color}
->
-  <span class="sr-only">{color}</span>
-      </button>
-  {/each}
-</div>

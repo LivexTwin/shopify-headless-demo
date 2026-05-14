@@ -22,6 +22,39 @@ export const GET_PRODUCT_BY_HANDLE = `
   query GetProductByHandle($handle: String!) {
     productByHandle(handle: $handle) {
       ...ProductDetailFragment
+      selectedOrFirstAvailableVariant {
+        id
+        selectedOptions {
+          name
+          value
+        }
+        price {
+          amount
+          currencyCode
+        }
+        availableForSale
+        quantityAvailable
+      }
+    }
+  }
+`;
+
+export const GET_VARIANT_BY_SELECTED_OPTIONS = `
+  query GetVariantBySelectedOptions($handle: String!, $selectedOptions: [SelectedOptionInput!]!) {
+    productByHandle(handle: $handle) {
+      variantBySelectedOptions(selectedOptions: $selectedOptions) {
+        id
+        selectedOptions {
+          name
+          value
+        }
+        price {
+          amount
+          currencyCode
+        }
+        availableForSale
+        quantityAvailable
+      }
     }
   }
 `;
