@@ -16,11 +16,6 @@ function prev() {
 
   if (index > 0) index -= 1;
 }
-
-
-  
-
-
 </script>
 
 {#if variant === "compact"}

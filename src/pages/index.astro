@@ -10,8 +10,6 @@ import ProductPurchaseBlock from "../components/Product/ProductPurchaseBlock.sve
 const data = await shopifyFetch(GET_DROP_PRODUCT);
 
 const product = data.products.nodes[0];
-
-console.log("PRODUCT RAW:", product);
 ---
 
 <SeoHead title="MALYXIA — Chapter 1" />
@@ -32,10 +30,10 @@ console.log("PRODUCT RAW:", product);
   </section>
   <!-- PRODUCT -->
   <section class="py-16 px-6 max-w-4xl mx-auto">
-    <div class="flex flex-col md:flex-row gap-10 items-start">
+    <div class="flex flex-col md:flex-row md:items-center gap-10 items-start">
       <!-- IMAGE -->
       <!-- FRONT AND BACK SLIDER -->
-      <div class="w-full md:w-1/2">
+      <div class="w-full md:w-2/3">
         <ProductMediaGallery
           client:load
           images={product.images}
@@ -47,7 +45,7 @@ console.log("PRODUCT RAW:", product);
 
       <div class="w-100">
         <a href={`/products/${product.handle}`}>
-          <h2>{product.title}</h2>
+          <h2 class="uppercase">{product.title}</h2>
         </a>
 
         <!-- Product Purchase Block -->

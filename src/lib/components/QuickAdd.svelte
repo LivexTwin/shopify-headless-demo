@@ -1,5 +1,6 @@
 <script>
   import ColorSwatch from "@lib/components/ColorSwatch.svelte";
+  import { getOptionValues } from "@lib/swatches";
 
   export let product;
   export let selectedOptions = {};
@@ -9,9 +10,8 @@
   export let hasAvailableOption;
   export let onSelect;
 
-  const colors = product.options
-    ?.find((o) => o.name === "Color")
-    ?.optionValues ?? [];
+
+const colors = getOptionValues(product, "Color");
 
   $: sizeOptions = getAvailableOptions && selectedOptions
     ? getAvailableOptions("Size")
@@ -26,6 +26,10 @@
   function selectColor(color) {
     updateOption?.("Color", color);
   }
+
+  function isSizeAvailable(size) {
+    return hasAvailableOption?.("Size", size);
+  }
 </script>
 
 
@@ -36,10 +40,11 @@
     {#each sizeOptions as size}
       <button
         type="button"
-        on:click={() => selectSize(size)}
-        disabled={!hasAvailableOption("Size", size)}
+        on:click={() => isSizeAvailable(size) && selectSize(size)}
+        disabled={!isSizeAvailable(size)}
         class:underline={selectedOptions.Size === size}
-        class:opacity-40={!hasAvailableOption("Size", size)}
+        class:opacity-40={!isSizeAvailable(size)}
+        class:pointer-events-none={!isSizeAvailable(size)}
         class=" text-xs hover:underline"
       >
         {size}
@@ -47,16 +52,16 @@
     {/each}
   </div>
 
-  <span class="text-xs  text-gray-400 uppercase tracking-wide pb-2">Color</span>
+  <span class="text-xs  text-gray-400 uppercase tracking-wide py-2">Color</span>
 
+{#key JSON.stringify(selectedOptions)}
   <ColorSwatch
     colors={colors}
     selected={selectedOptions.Color}
     onSelect={selectColor}
-    hasAvailableOption={(name, value) =>
-      getAvailableOptions?.(name)?.includes(value)
-    }
+    hasAvailableOption={hasAvailableOption}
   />
+{/key}
 </div>
 
 

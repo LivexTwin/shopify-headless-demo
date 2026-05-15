@@ -45,7 +45,35 @@ fragment ProductDetailFragment on Product {
       }
     }
   }
-  variants(first: 10) {
+
+colorGalleries: metafield(
+  namespace: "custom",
+  key: "custom_color_gallery"
+) {
+  references(first: 20) {
+    nodes {
+      ... on Metaobject {
+        id
+        fields {
+          key
+          value
+          reference {
+            ... on MediaImage {
+              image {
+                url
+                altText
+                width
+                height
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+  variants(first: 100) {
     edges {
       node {
         id
@@ -60,6 +88,8 @@ fragment ProductDetailFragment on Product {
           name
           value
         }
+
+        
       }
     }
   }

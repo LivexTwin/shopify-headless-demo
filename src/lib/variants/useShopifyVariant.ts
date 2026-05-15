@@ -1,21 +1,44 @@
-export function createShopifyVariantResolver(product: any, mode = "detail") {
+export function createShopifyVariantResolver(
+  product: any,
+  mode = "detail",
+  initialOptions: Record<string, string> = {},
+) {
   const variants: any[] = product?.variants ?? [];
   const options: any[] = product?.options ?? [];
-  let selectedOptions: Record<string, string> = {};
+  let selectedOptions: Record<string, string> = { ...initialOptions };
 
   const initialVariant = product?.selectedOrFirstAvailableVariant ?? null;
 
   if (mode === "quick" && initialVariant) {
-    selectedOptions = initialVariant.selectedOptions.reduce(
-      (acc: Record<string, string>, opt: any) => {
-        acc[opt.name] = opt.value;
-        return acc;
-      },
-      {},
-    );
+    selectedOptions = {
+      ...initialVariant.selectedOptions.reduce(
+        (acc: Record<string, string>, opt: any) => {
+          acc[opt.name] = opt.value;
+          return acc;
+        },
+        {},
+      ),
+      ...selectedOptions,
+    };
   }
 
   // Detail mode starts with no preselection to show all options
+  if (mode === "detail" && Object.keys(selectedOptions).length === 0) {
+    const firstAvailable = product?.selectedOrFirstAvailableVariant;
+
+    if (firstAvailable) {
+      const colorOption = firstAvailable.selectedOptions.find(
+        (o) => o.name === "Color",
+      );
+
+      if (colorOption) {
+        selectedOptions = {
+          Color: colorOption.value,
+          // Size intentionally left empty
+        };
+      }
+    }
+  }
 
   function getSelectedOptions() {
     return { ...selectedOptions };
@@ -26,7 +49,6 @@ export function createShopifyVariantResolver(product: any, mode = "detail") {
       ...selectedOptions,
       [name]: value,
     };
-    console.log("resolver updateOption", { name, value, selectedOptions });
   }
 
   function hasAvailableOption(optionName, optionValue) {
@@ -53,7 +75,6 @@ export function createShopifyVariantResolver(product: any, mode = "detail") {
     return [
       ...new Set(
         variants
-          .filter((v) => v.availableForSale)
           .map(
             (v) => v.selectedOptions.find((o) => o.name === optionName)?.value,
           )

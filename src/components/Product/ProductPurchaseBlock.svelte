@@ -1,39 +1,87 @@
 <script>
-  import ProductAddToCart from "./ProductAddToCart.svelte";
+  import { onMount } from "svelte";
+
   import Money from "../Money.svelte";
   import QuickAdd from "@lib/components/QuickAdd.svelte";
   import DetailSelector from "@lib/components/DetailSelector.svelte";
-  import { createShopifyVariantResolver } from "@lib/variants/useShopifyVariant";
+  import ProductAddToCart from "./ProductAddToCart.svelte";
 
+  import { createShopifyVariantResolver } from "@lib/variants/useShopifyVariant";
+  import {
+    parseOptionsFromUrl,
+    syncOptionsToUrl,
+  } from "@lib/variants/variantUrl";
+
+  // -----------------------------
+  // Props
+  // -----------------------------
   export let product;
   export let mode = "quick";
 
+  // -----------------------------
+  // State
+  // -----------------------------
   let resolver = null;
+
   let selectedOptions = {};
   let selectedVariant = null;
   let canAddToCart = false;
 
-  $: if (product) {
-    resolver = createShopifyVariantResolver(product, mode);
-    refreshSelection();
-  }
+  let initialized = false;
+  let lastProductId = null;
+  let lastUrlSignature = "";
 
+  // -----------------------------
+  // Lifecycle
+  // -----------------------------
+  onMount(() => {
+    if (!product) return;
+
+    // prevent accidental re-init per product
+    if (product.id === lastProductId) return;
+    lastProductId = product.id;
+
+    const initialOptions = parseOptionsFromUrl(
+      window.location.search || ""
+    );
+
+    resolver = createShopifyVariantResolver(
+      product,
+      mode,
+      initialOptions
+    );
+
+    refreshSelection();
+    initialized = true;
+  });
+
+  // -----------------------------
+  // State sync
+  // -----------------------------
   function refreshSelection() {
     if (!resolver) return;
+
     selectedOptions = resolver.getSelectedOptions();
     selectedVariant = resolver.getSelectedVariant();
     canAddToCart = resolver.isVariantValidForCart();
-    console.log("product purchase state", {
-      selectedOptions,
-      selectedVariant,
-      canAddToCart,
-    });
   }
 
+  // -----------------------------
+  // Actions
+  // -----------------------------
   function updateOption(name, value) {
     if (!resolver) return;
+
     resolver.updateOption(name, value);
     refreshSelection();
+
+    const options = resolver.getSelectedOptions();
+    const signature = JSON.stringify(options);
+
+    if (signature === lastUrlSignature) return;
+
+    lastUrlSignature = signature;
+    syncOptionsToUrl(options);
   }
 </script>
 
@@ -53,10 +101,7 @@
         selectedVariant={selectedVariant}
         updateOption={updateOption}
         getAvailableOptions={resolver.getAvailableOptions}
-        hasAvailableOption={(name, value) =>
-            resolver.getAvailableOptions(name).includes(value)
-          }
-        onSelect={(v) => console.log("quick variant", v)}
+        hasAvailableOption={resolver.hasAvailableOption}
       />
 
       <ProductAddToCart
@@ -86,11 +131,10 @@
         <DetailSelector
           {product}
           selectedOptions={selectedOptions}
+          selectedVariant={selectedVariant}
           updateOption={updateOption}
           getAvailableOptions={resolver.getAvailableOptions}
-          hasAvailableOption={(name, value) =>
-            resolver.getAvailableOptions(name).includes(value)
-          }
+          hasAvailableOption={resolver.hasAvailableOption}
         />
 
         <ProductAddToCart

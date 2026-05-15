@@ -49,7 +49,7 @@ const product = data.productByHandle;
           <ProductMediaGallery
             client:load
             variant="editorial"
-            images={[...product.images, ...product.images]}
+            images={product.images}
           />
         </div>
       </div>

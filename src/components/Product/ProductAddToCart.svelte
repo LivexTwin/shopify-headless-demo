@@ -15,8 +15,6 @@
   async function handleAddToCart() {
     if (!variantId || soldOut || disabled || loading) return;
 
-    console.log("ADD TO CART:", variantId);
-
     loading = true;
 
     try {

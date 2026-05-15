@@ -1,5 +1,6 @@
 <script>
   import ColorSwatch from "@lib/components/ColorSwatch.svelte";
+  import { getOptionValues } from "@lib/swatches";
 
   export let product;
   export let selectedOptions = {};
@@ -7,8 +8,8 @@
   export let getAvailableOptions;
   export let hasAvailableOption;
 
-  const colors =
-    product.options?.find((o) => o.name === "Color")?.optionValues ?? [];
+ 
+  const colors = getOptionValues(product, "Color");
 
   $: sizeOptions = getAvailableOptions && selectedOptions
     ? getAvailableOptions("Size")
@@ -23,21 +24,25 @@
 
     <select
       class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-      value={selectedOptions.Size || ""}
-     on:change={(e) => updateOption("Size", e.target.value)}
+
+       bind:value={selectedOptions.Size}
+       on:change={(e) => updateOption("Size", e.target.value)}
     >
-    <option value="true" disabled selected>
+       <option value="" disabled selected={!selectedOptions.Size}>
        -
        </option>
 
       {#each sizeOptions as size}
-        <option
-          value={size}
-          disabled={!sizeOptions.includes(size)}
-        >
-          {size}
-        </option>
-      {/each}
+      <option
+       value={size}
+       disabled={!hasAvailableOption("Size", size)}
+         >
+       {size}
+
+      </option>
+        {/each}
+
+
     </select>
   </div>
 
@@ -46,5 +51,6 @@
     selected={selectedOptions.Color}
     onSelect={(c) => updateOption("Color", c)}
     hasAvailableOption={hasAvailableOption}
+    size="lg"
   />
 </section>

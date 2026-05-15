@@ -33,7 +33,7 @@ export const PRODUCT_DROP_FRAGMENT = `
     quantityAvailable
   }
 
-    variants(first: 10) {
+    variants(first: 100) {
       edges {
         node {
           id

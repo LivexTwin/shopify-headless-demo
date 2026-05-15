@@ -9,6 +9,10 @@
     size === "lg"
       ? "w-5 h-5"
       : "w-3 h-3";
+
+  function isColorAvailable(color) {
+    return hasAvailableOption?.("Color", color.name);
+  }
 </script>
 
 <div class="flex gap-[0.075rem] flex-wrap">
@@ -16,18 +20,20 @@
 
     <button
       type="button"
-      on:click={() => onSelect(color.name)}
-      disabled={!hasAvailableOption("Color", color.name)}
+      on:click={() => isColorAvailable(color) && onSelect(color.name)}
+      disabled={!isColorAvailable(color)}
+      aria-disabled={!isColorAvailable(color)}
+      class:opacity-40={!isColorAvailable(color)}
       class={`relative rounded-xs border flex items-center justify-center ${sizeClass}`}
+      class:pointer-events-none={!isColorAvailable(color)}
       style="background-color: {color.swatch?.color}"
       aria-label={color.name}
     >
 
       {#if selected === color.name}
-        <span class="text-[10px] font-bold text-white mix-blend-difference">
-          <!-- × -->
-           x
-        </span>
+      <span class="text-[8px] font-bold text-white drop-shadow-[0_0_2px_black]">
+        X
+      </span>
       {/if}
 
       <span class="sr-only">{color.name}</span>
