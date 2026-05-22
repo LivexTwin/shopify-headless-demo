@@ -9,6 +9,11 @@
   grid-template-rows: auto 1fr auto;
 }
 
+.bg-gray-100 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(130 130 130 / var(--tw-bg-opacity, 1));
+}
+
 button {
   @apply cursor-pointer
           disabled:pointer-events-none

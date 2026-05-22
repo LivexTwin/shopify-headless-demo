@@ -11,37 +11,39 @@
  
   const colors = getOptionValues(product, "Color");
 
+
   $: sizeOptions = getAvailableOptions && selectedOptions
     ? getAvailableOptions("Size")
     : [];
 </script>
 
-<section class="flex items-center gap-2">
+<section class="flex items-center gap-1">
   <div class="relative w-fit">
-    <div class="flex items-center justify-between bg-stone-300 px-2 py-0.75 text-xs uppercase tracking-widest min-w-[60px]">
-      <span>{selectedOptions.Size || "Size +"}</span>
-    </div>
+
+   <div class="flex items-center justify-center bg-stone-300 px-2 py-0.75 text-xs uppercase tracking-widest rounded-[2px] min-w-[60px]">
+     <span>{selectedOptions.Size || "Size +"}</span>
+   </div>
 
     <select
       class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+      aria-label="Select size"
 
-       bind:value={selectedOptions.Size}
+       bind:value={selectedOptions}
        on:change={(e) => updateOption("Size", e.target.value)}
     >
-       <option value="" disabled selected={!selectedOptions.Size}>
-       -
-       </option>
+     <option disabled selected  value="">
+      -
+     </option>
+    {#each sizeOptions as size}
+      {@const available = hasAvailableOption("Size", size)}
 
-      {#each sizeOptions as size}
       <option
-       value={size}
-       disabled={!hasAvailableOption("Size", size)}
-         >
-       {size}
-
-      </option>
-        {/each}
-
+        value={size}
+        disabled={!available}
+        >
+    {size}{!available ? "  Sold Out" : ""}
+  </option>
+  {/each}
 
     </select>
   </div>

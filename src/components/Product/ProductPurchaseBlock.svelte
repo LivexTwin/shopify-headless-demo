@@ -5,8 +5,12 @@
   import QuickAdd from "@lib/components/QuickAdd.svelte";
   import DetailSelector from "@lib/components/DetailSelector.svelte";
   import ProductAddToCart from "./ProductAddToCart.svelte";
+  import { cartToast } from "@stores/cartToast";
+  import { cart } from "@stores/cart";
 
   import { createShopifyVariantResolver } from "@lib/variants/useShopifyVariant";
+  import { addToCart } from "@lib/cartActions";
+  import { getMaxLimitError, getStockMessage } from "@utils/product";
   import {
     parseOptionsFromUrl,
     syncOptionsToUrl,
@@ -17,17 +21,24 @@
   // -----------------------------
   export let product;
   export let mode = "quick";
+  
 
   // -----------------------------
   // State
   // -----------------------------
   let resolver = null;
+  let loading = false;
+  let error = "";
+  let infoMessage = "";
 
   let selectedOptions = {};
   let selectedVariant = null;
   let canAddToCart = false;
 
+ 
+
   let initialized = false;
+  let userInteracted = false;
   let lastProductId = null;
   let lastUrlSignature = "";
 
@@ -59,21 +70,29 @@
   // State sync
   // -----------------------------
   function refreshSelection() {
+    
     if (!resolver) return;
 
     selectedOptions = resolver.getSelectedOptions();
     selectedVariant = resolver.getSelectedVariant();
+    
     canAddToCart = resolver.isVariantValidForCart();
   }
 
+
+  
   // -----------------------------
   // Actions
   // -----------------------------
-  function updateOption(name, value) {
-    if (!resolver) return;
+  function updateOption(name, value, source = "user") {
+  if (source === "user") userInteracted = true;
 
     resolver.updateOption(name, value);
     refreshSelection();
+
+    if (canAddToCart && error) {
+      error = "";
+    }
 
     const options = resolver.getSelectedOptions();
     const signature = JSON.stringify(options);
@@ -83,7 +102,57 @@
     lastUrlSignature = signature;
     syncOptionsToUrl(options);
   }
+
+  
+    // -----------------------------
+  // Handlers
+  // -----------------------------
+  $: currentQty =
+  $cart?.lines?.find(
+    (l) => l.merchandise?.id === selectedVariant?.id
+  )?.quantity ?? 0;
+
+$: infoMessage =
+  userInteracted && selectedVariant?.id
+    ? getStockMessage(selectedVariant)
+    : "";
+  
+  async function handleAddToCart() {
+  error = "";
+
+  if (!selectedVariant?.id) {
+    error = "Please select a variant";
+    return;
+  }
+
+  const limitError = getMaxLimitError(selectedVariant, currentQty);
+
+  if (limitError) {
+    error = limitError;
+    return;
+  }
+
+  loading = true;
+
+  try {
+    await addToCart(selectedVariant.id, 1);
+
+    const latestLine = $cart?.lines?.find(
+      (l) => l.merchandise?.id === selectedVariant.id
+    );
+
+    cartToast.set({
+      open: true,
+      line: latestLine ?? null,
+    });
+
+  } finally {
+    loading = false;
+  }
+}
 </script>
+
+
 
 {#if resolver}
   {#if mode === "quick"}
@@ -106,6 +175,11 @@
 
       <ProductAddToCart
         disabled={!canAddToCart}
+        canAddToCart={canAddToCart}
+        error={error}
+        loading={loading}
+        soldOut={selectedVariant?.availableForSale === false}
+        on:click={handleAddToCart}
         variantId={selectedVariant?.id}
         quantityAvailable={selectedVariant?.quantityAvailable || 0}
         availableForSale={selectedVariant?.availableForSale ?? true}
@@ -127,7 +201,7 @@
         {/if}
       {/if}
 
-      <div class="flex flex-wrap items-center gap-1 pt-3.5">
+      <div class="flex flex-wrap gap-1 pt-3.5">
         <DetailSelector
           {product}
           selectedOptions={selectedOptions}
@@ -138,12 +212,32 @@
         />
 
         <ProductAddToCart
-          disabled={!canAddToCart}
+          canAddToCart={canAddToCart}
+          error={error}
+          loading={loading}
+          soldOut={selectedVariant?.availableForSale === false}
+          disabled={false}
+          on:click={handleAddToCart}
+          onValidationError={() => {
+          error = "Please select a variant";
+           }}
           variantId={selectedVariant?.id}
           quantityAvailable={selectedVariant?.quantityAvailable || 0}
           availableForSale={selectedVariant?.availableForSale ?? true}
         />
       </div>
+
+  
     </div>
   {/if}
+{/if}
+
+{#if error}
+  <p class="text-[11px] uppercase tracking-wide text-red-600 mt-2">
+    {error}
+  </p>
+{:else if infoMessage}
+  <p class="text-[11px] uppercase tracking-wide text-neutral-500 mt-2">
+    {infoMessage}
+  </p>
 {/if}

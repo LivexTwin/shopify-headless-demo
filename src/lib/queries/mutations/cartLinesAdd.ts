@@ -14,6 +14,16 @@ export const CART_LINES_ADD = `
             }
           }
         }
+        cost {
+          subtotalAmount {
+            amount
+            currencyCode
+          }
+          totalAmount {
+            amount
+            currencyCode
+          }
+        }
       }
       userErrors {
         field

@@ -7,7 +7,7 @@
 
   $: sizeClass =
     size === "lg"
-      ? "w-5 h-5"
+      ? "w-5.5 h-5.5"
       : "w-3 h-3";
 
   function isColorAvailable(color) {

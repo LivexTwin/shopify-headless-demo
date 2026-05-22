@@ -2,23 +2,27 @@
 import "../styles/global.css";
 import "../styles/layout.css";
 import CartProvider from "../components/Cart/CartProvider.svelte";
+import CartToast from "../components/Cart/CartToast.svelte";
 import TheNavigation from "../components/TheNavigation.astro";
 import TheFooter from "../components/TheFooter.astro";
 import SeoHead from "@components/SeoHead.astro";
+import { ClientRouter } from "astro:transitions";
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" transition:animate="none">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <SeoHead slot="head" />
     <link rel="icon" href="/favicon.svg" />
+    <ClientRouter />
   </head>
 
   <body>
     <div id="site">
       <CartProvider client:load />
+      <CartToast client:load />
       <header class="sticky top-0 z-50 bg-white border-b border-gray-200">
         <TheNavigation />
       </header>

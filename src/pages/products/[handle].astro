@@ -33,11 +33,9 @@ const product = data.productByHandle;
 
 <DefaultLayout>
   <div class="relative z-10 min-h-screen">
-    <!-- FIXED REMOVING ITEMS START ^ NOW WORKS!! -->
-    <div class="lg:flex lg:gap-12">
-      <!-- FIXED REMOVING ITEMS START ^ NOW WORKS!! -->
+    <div class="lg:grid lg:gap-12 lg:grid-cols-[1fr_500px]">
       <!-- LEFT: MEDIA -->
-      <div class="flex-1">
+      <div class="flex-1 min-w-0">
         <div class="block lg:hidden">
           <ProductMediaGallery
             client:load
@@ -55,7 +53,7 @@ const product = data.productByHandle;
       </div>
 
       <!-- RIGHT: STICKY INFO -->
-      <div class="relative flex flex-col w-[500px]">
+      <div class="relative flex flex-col">
         <div class="flex-1"></div>
         <div class="lg:sticky lg:bottom-1">
           <div class="space-y-8 p-5">
