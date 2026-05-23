@@ -1,33 +1,201 @@
 ---
 import CartIcon from "./Cart/CartIcon.svelte";
+import NavLinks from "./NavLinks.astro";
+
+const navItems = [
+  { name: "Shop", href: "/products/intent-tee" }, // TEMP: direct link to product until we have more
+  { name: "Info", href: "/about" },
+];
 ---
 
-<nav class="site-nav max-w-7xl mx-auto px-4 py-4">
-  <div class="flex items-center justify-between">
-    <a
-      href="/"
-      class="flex items-center gap-3"
-      aria-label="Home — Astro and Svelte demo store"
-      role="link"
-    >
-      <img src="/astro-logo.svg" alt="Astro" class="w-8 h-8" />
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
-        stroke="currentColor"
-        class="w-6 h-6 text-black"
-        aria-hidden="true"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M12 4.5v15m7.5-7.5h-15"></path>
-      </svg>
-      <img src="/svelte-logo.svg" alt="Svelte" class="w-8 h-8" />
+<!-- ===================== --><!-- MOBILE NAV --><!-- ===================== -->
+<nav
+  class="fixed bottom-0 left-0 right-0 flex justify-between px-2 py-2 md:hidden z-50"
+>
+  <div class="flex items-center gap-[2px]">
+    <a class="malyxia-pill" href="/">
+      <span class="malyxia-base">MALYXIA</span>
+      <span class="malyxia-text">MALYXIA</span>
     </a>
 
+    <NavLinks items={navItems} />
+  </div>
+
+  <CartIcon client:load />
+</nav>
+
+<!-- ===================== -->
+<!-- DESKTOP NAV -->
+<!-- ===================== -->
+
+<div class="hidden md:block">
+  <!-- LEFT -->
+  <div class="fixed top-0 left-0 z-50 flex items-center gap-[2px] px-2 py-2">
+    <a class="malyxia-pill" href="/">
+      <span class="malyxia-base">MALYXIA</span>
+      <span class="malyxia-text">MALYXIA</span>
+    </a>
+
+    <div class="flex gap-[2px]">
+      <NavLinks items={navItems} />
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="fixed top-0 right-0 z-50 flex items-center px-2 py-2">
     <CartIcon client:load />
   </div>
-</nav>
+</div>
+
+<style>
+  .malyxia-pill {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px;
+    background: #000;
+    border-radius: 2px;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  /* invisible layout anchor (prevents ALL shifting) */
+  .malyxia-base {
+    visibility: hidden;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  /* animated layer */
+  .malyxia-text {
+    position: absolute;
+    inset: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 12px;
+
+    text-transform: uppercase;
+    color: #fff;
+  }
+
+  /* scramble characters */
+  .dud {
+    opacity: 0.6;
+  }
+
+  .pre {
+    opacity: 0.15;
+  }
+</style>
+
+<script is:inline>
+  class ScrambleText {
+    constructor(el, opts = {}) {
+      this.el = el;
+
+      this.opts = {
+        chars: "MALYXIA#//01-_[]{}MΛLXIA",
+        spread: opts.spread || 80,
+        duration: opts.duration || 900, // ⬅️ now in ms (IMPORTANT FIX)
+        waveSpeed: opts.waveSpeed || 0.012,
+      };
+
+      this.queue = [];
+      this.raf = null;
+      this.startTime = 0;
+
+      this._update = this._update.bind(this);
+    }
+
+    play(text) {
+      cancelAnimationFrame(this.raf);
+
+      const { spread, duration } = this.opts;
+      const len = text.length;
+      const seed = Date.now() ^ ((Math.random() * 0xffffff) | 0);
+      const rng = this._rng(seed);
+
+      this.queue = text.split("").map((to) => {
+        const start = Math.random() * spread * 10; // pseudo-random offset window
+        const end = start + (Math.random() * duration * 0.6 + duration * 0.4);
+
+        return {
+          to,
+          start,
+          end,
+          char: null,
+          rng,
+        };
+      });
+
+      this.startTime = performance.now();
+      this._update();
+    }
+
+    _update(now) {
+      const { chars, waveSpeed } = this.opts;
+      const t = now - this.startTime; // ⬅️ REAL TIME (fixes mobile/desktop mismatch)
+
+      let out = "";
+      let done = 0;
+
+      for (const [i, q] of this.queue.entries()) {
+        if (t >= q.end) {
+          done++;
+          out += q.to;
+        } else if (t >= q.start) {
+          if (!q.char || q.rng() < 0.12) {
+            q.char = chars[Math.floor(q.rng() * chars.length)];
+          }
+
+          const wave = Math.sin(t * waveSpeed - i * 0.55) * 2.2;
+
+          out += `<span class="dud" style="
+          display:inline-block;
+          transform:translateY(${wave.toFixed(1)}px);
+        ">${q.char}</span>`;
+        } else {
+          out += `<span style="opacity:0">&nbsp;</span>`;
+        }
+      }
+
+      this.el.innerHTML = out;
+
+      if (done < this.queue.length) {
+        this.raf = requestAnimationFrame(this._update);
+      } else {
+        this.el.textContent = this.queue.map((q) => q.to).join("");
+      }
+    }
+
+    _rng(seed) {
+      let s = seed | 0;
+      return () => {
+        s = (s ^ (s << 13)) | 0;
+        s = (s ^ (s >> 17)) | 0;
+        s = (s ^ (s << 5)) | 0;
+        return (s >>> 0) / 0xffffffff;
+      };
+    }
+  }
+
+  function initMalyxia() {
+    if (window.__malyxiaPlayed) return;
+    window.__malyxiaPlayed = true;
+
+    document.querySelectorAll(".malyxia-text").forEach((el) => {
+      new ScrambleText(el, {
+        spread: 80,
+        duration: 500, // ⬅️ THIS is now real milliseconds (same everywhere)
+        waveSpeed: 0.00012,
+      }).play("MALYXIA");
+    });
+  }
+
+  document.addEventListener("astro:page-load", initMalyxia);
+</script>

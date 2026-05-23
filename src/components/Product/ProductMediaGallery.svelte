@@ -2,6 +2,7 @@
 import ShopifyImage from "@components/ShopifyImage.svelte";
 
   export let images = [];
+  export let productHandle = "";
   export let altBase = "";
   export let variant = "compact"; // "compact" | "editorial" | "swipe"
 
@@ -16,6 +17,7 @@ function prev() {
 
   if (index > 0) index -= 1;
 }
+
 </script>
 
 {#if variant === "compact"}
@@ -34,21 +36,44 @@ function prev() {
     classList="absolute inset-0 w-full h-full object-cover"
   />
 {/key}
-<p class="absolute bottom-2 right-2 text-[11px] opacity-50 tracking-wider">
-  {index + 1} / {images.length}
-</p>
 
     <!-- minimal controls -->
     {#if images.length > 1}
-      <button on:click={prev} class="absolute left-2 top-1/2">‹</button>
-      <button on:click={next} class="absolute right-2 top-1/2">›</button>
+<button
+  on:click={prev}
+  class="absolute left-3 top-1/2 -translate-y-1/2
+         -translate-x-1/2
+         w-12 h-12 flex items-center justify-center"
+>
+  <span class="text-sm leading-none">‹</span>
+</button>
+
+<button
+  on:click={next}
+  class="absolute right-3 top-1/2 -translate-y-1/2
+         translate-x-1/2
+         w-12 h-12 flex items-center justify-center"
+>
+  <span class="text-sm leading-none">›</span>
+</button>
     {/if}
-
+  
   </div>
+<div class="flex justify-between items-center p-2">
+  <p class="text-[11px] opacity-50 tracking-wider">
+    {index + 1} / {images.length}
+  </p>
 
+  <a
+    href={`/products/${productHandle}`}
+    class="text-xs uppercase tracking-wider underline opacity-50"
+  >
+    Full View
+  </a>
+</div>
   
 {:else if variant === "swipe"}
-  <div class="flex overflow-x-auto snap-x snap-mandatory">
+  <div class="flex overflow-x-auto snap-x snap-mandatory h-[400px]">
     {#each images as image}
       <div class="min-w-full snap-center">
         <ShopifyImage

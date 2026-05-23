@@ -4,12 +4,16 @@ export const PRODUCT_DROP_FRAGMENT = `
     title
     handle
 
+    metafield(namespace: "drop", key: "stock_display") {
+      value
+    }
+
     options {
       name
       optionValues {
         name
         swatch {
-          color   
+          color
           image {
             previewImage {
               url
@@ -19,19 +23,19 @@ export const PRODUCT_DROP_FRAGMENT = `
       }
     }
 
-  selectedOrFirstAvailableVariant {
-   id
-  selectedOptions {
-    name
-    value
-  }
-   price {
-    amount
-    currencyCode
-  }
-    availableForSale
-    quantityAvailable
-  }
+    selectedOrFirstAvailableVariant {
+      id
+      selectedOptions {
+        name
+        value
+      }
+      price {
+        amount
+        currencyCode
+      }
+      availableForSale
+      quantityAvailable
+    }
 
     variants(first: 100) {
       edges {
@@ -62,4 +66,4 @@ export const PRODUCT_DROP_FRAGMENT = `
       }
     }
   }
-  `;
+`;

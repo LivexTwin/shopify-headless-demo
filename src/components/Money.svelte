@@ -9,7 +9,7 @@
   }).formatToParts(Number(amount));
 </script>
 
-<span class="text-sm">
+<span class="text-xs">
   {#each formattedParts as part}
     {#if part.type === 'currency'}
       <span style="font-size: 0.5em; vertical-align: middle; ">{part.value}</span>

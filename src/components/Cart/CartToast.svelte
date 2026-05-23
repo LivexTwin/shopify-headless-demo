@@ -41,67 +41,64 @@
   }
 </script>
 
-{#if toast.open}
+{#if toast.open || isClosing}
 
- <button
-  type="button"
-  class="fixed inset-0 z-51 bg-neutral-600/50 cursor-pointer backdrop {isClosing ? 'backdrop-out' : ''}"
-  on:click={close}
-  aria-label="Close cart"
-  > 
-  </button>
+  <!-- BACKDROP -->
+  <button
+    type="button"
+    class="fixed inset-0 z-50 bg-neutral-600/50 backdrop "
+    class:backdrop-out={isClosing}
+    on:click={close}
+    aria-label="Close cart"
+  ></button>
 
+  <!-- SINGLE CART CONTAINER (always exists during animation) -->
+  <section
+    class="px-2 z-52 w-full md:max-w-[280px] fixed bottom-14 md:right-0 md:top-9 md:h-fit rounded-[2px] text-white opacity-fade"
+    class:fade-out={isClosing}
 
-  <div 
-    class="fixed bottom-6 px-2  z-51 w-full md:min-w-[280px] md:right-6 rounded-[2px] text-white opacity-fade"
-    style="opacity: {isClosing ? 0 : 1}"
   >
 
     {#if $cart?.lines?.length > 0}
 
-      <div>
-        {#each $cart.lines as line (line.id)}
-          <CartRow
-            {line}
-          />
-        {/each}
-      </div>
 
-      <div class="flex justify-between mb-[.125rem] rounded-[2px] bg-gray-100 py-1 text-sm  px-2">
+    
+
+      {#each $cart.lines as line (line.id)}
+        <CartRow {line} />
+      {/each}
+
+      <div class="flex justify-between mb-[.125rem] rounded-[2px] bg-gray-100 py-1 text-xs px-2">
         <span class="tracking-wider">TOTAL :</span>
-        <span >
+        <span>
           <Money
-           amount={$cart.cost?.subtotalAmount?.amount ?? "0.00"}
-           currencyCode={$cart.cost?.subtotalAmount?.currencyCode ?? "USD"}
-           />
+            amount={$cart.cost?.subtotalAmount?.amount ?? "0.00"}
+            currencyCode={$cart.cost?.subtotalAmount?.currencyCode ?? "USD"}
+          />
         </span>
       </div>
 
-  <button
-    class="bg-black text-white flex justify-between items-center rounded-[2px] px-2 w-full transition-colors duration-200 hover:bg-white hover:text-black "
-    on:click={goToCheckout}
-   >
-  <span class="text-sm uppercase py-2">
-    Checkout
-  </span>
-
-  <span>
-    →
-  </span>
-</button>
+      <button
+        class="bg-black text-white flex justify-between items-center 
+        rounded-[2px] px-2 w-full transition-colors duration-200 hover:bg-white hover:text-black"
+        on:click={goToCheckout}
+      >
+        <span class="text-xs uppercase py-2">Checkout</span>
+        <span>→</span>
+      </button>
 
     {:else}
 
-      <div class="py-10 text-center text-sm opacity-60 uppercase tracking-wider">
+      <div class="flex items-center justify-center md:justify-end text-xs 
+      uppercase tracking-wider opacity-60  ">
         Cart empty
       </div>
 
     {/if}
 
-  </div>
+  </section>
 
 {/if}
-
 
 <style>
 .backdrop {

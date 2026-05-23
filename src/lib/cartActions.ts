@@ -66,6 +66,14 @@ export async function addToCart(variantId: string, quantity = 1) {
   return res;
 }
 
+export async function buyNow(variantId: string) {
+  if (!variantId) return; // or throw
+
+  const cart = await addToCart(variantId, 1);
+
+  window.location.href = cart.checkoutUrl;
+}
+
 /**
  * 🟢 SAFE UPDATE
  */

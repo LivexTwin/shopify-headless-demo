@@ -1,0 +1,15 @@
+---
+// NavLinks.astro
+const { items } = Astro.props;
+---
+
+{
+  items.map((item) => (
+    <a
+      href={item.href}
+      class="text-xs uppercase tracking-wide bg-gray-100 text-white px-2 py-1 rounded-[2px] md:transition-all md:ease-out md:hover:opacity-50"
+    >
+      {item.name}
+    </a>
+  ))
+}

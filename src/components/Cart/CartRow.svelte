@@ -9,7 +9,7 @@
   export let line;
 </script>
 
-<div class="flex  mb-[.5px] rounded-[2px] bg-gray-100 gap-2 pr-2">
+<div class="flex  mb-[1px] rounded-[2px] bg-gray-100 gap-2 pr-2">
 
   <!-- IMAGE -->
   <div class="shrink-0 bg-white">
@@ -27,7 +27,7 @@
   <div class="flex-1 min-w-0 b py-2">
 
     <!-- TITLE -->
-    <p class="text-sm uppercase leading-tight">
+    <p class="text-xs uppercase leading-tight">
       {line.merchandise.product.title}
     </p>
 
@@ -42,7 +42,7 @@
   <div class="flex flex-col items-end text-right pt-2">
 
     <!-- PRICE -->
-    <div class="text-sm">
+    <div class="text-xs">
     <Money
      amount={line.merchandise.price.amount}
      currencyCode={line.merchandise.price.currencyCode}

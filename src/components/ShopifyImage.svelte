@@ -10,6 +10,7 @@
   export let loading: HTMLImageElement["loading"] = "lazy";
   export let sizes = "100vw";
 
+ 
   const fallback = "/placeholder.svg";
 
   const srcSetWidths = [100, 200, 400, 600, 800, 1000, 1200, 1600];
@@ -47,13 +48,16 @@
   }
 </script>
 
-<img
-  src={getMainSrc()}
-  alt={image?.altText || "Product image"}
-  class={classList}
-  width={image?.width ?? 600}
-  height={image?.height ?? 600}
-  loading={loading}
-  sizes={sizes}
-  srcset={generateSrcSet()}
-/>
+
+
+  <img
+    src={getMainSrc()}
+    alt={image?.altText || "Product image"}
+    class={classList}
+    width={image?.width}
+    height={image?.height}
+    loading={loading}
+    sizes={sizes}
+    srcset={generateSrcSet()}
+
+  />

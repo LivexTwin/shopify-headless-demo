@@ -5,28 +5,29 @@
   import QuickAdd from "@lib/components/QuickAdd.svelte";
   import DetailSelector from "@lib/components/DetailSelector.svelte";
   import ProductAddToCart from "./ProductAddToCart.svelte";
+
   import { cartToast } from "@stores/cartToast";
   import { cart } from "@stores/cart";
 
   import { createShopifyVariantResolver } from "@lib/variants/useShopifyVariant";
+
   import { addToCart } from "@lib/cartActions";
-  import { getMaxLimitError, getStockMessage } from "@utils/product";
+
+  import {
+    getMaxLimitError,
+    getStockMessage,
+  } from "@utils/product";
+
   import {
     parseOptionsFromUrl,
     syncOptionsToUrl,
   } from "@lib/variants/variantUrl";
 
-  // -----------------------------
-  // Props
-  // -----------------------------
   export let product;
   export let mode = "quick";
-  
 
-  // -----------------------------
-  // State
-  // -----------------------------
-  let resolver = null;
+  let resolver ;
+
   let loading = false;
   let error = "";
   let infoMessage = "";
@@ -35,59 +36,63 @@
   let selectedVariant = null;
   let canAddToCart = false;
 
- 
-
   let initialized = false;
   let userInteracted = false;
+
   let lastProductId = null;
   let lastUrlSignature = "";
-
-  // -----------------------------
-  // Lifecycle
-  // -----------------------------
-  onMount(() => {
-    if (!product) return;
-
-    // prevent accidental re-init per product
-    if (product.id === lastProductId) return;
-    lastProductId = product.id;
-
-    const initialOptions = parseOptionsFromUrl(
-      window.location.search || ""
-    );
-
-    resolver = createShopifyVariantResolver(
-      product,
-      mode,
-      initialOptions
-    );
-
-    refreshSelection();
-    initialized = true;
-  });
 
   // -----------------------------
   // State sync
   // -----------------------------
   function refreshSelection() {
-    
     if (!resolver) return;
 
     selectedOptions = resolver.getSelectedOptions();
     selectedVariant = resolver.getSelectedVariant();
-    
     canAddToCart = resolver.isVariantValidForCart();
   }
 
+  // -----------------------------
+  // Create resolver immediately
+  // -----------------------------
+  if (product) {
+    resolver = createShopifyVariantResolver(
+      product,
+      mode,
+      {}
+    );
 
-  
+    refreshSelection();
+  }
+
   // -----------------------------
-  // Actions
+  // URL hydration only
   // -----------------------------
+  onMount(() => {
+    if (!resolver) return;
+
+    const initialOptions = parseOptionsFromUrl(
+      window.location.search || ""
+    );
+
+    Object.entries(initialOptions).forEach(([name, value]) => {
+      resolver.updateOption(name, value);
+    });
+
+    refreshSelection();
+
+    initialized = true;
+    lastProductId = product?.id;
+  });
+
   function updateOption(name, value, source = "user") {
-  if (source === "user") userInteracted = true;
+    if (source === "user") {
+      userInteracted = true;
+    }
 
     resolver.updateOption(name, value);
+
     refreshSelection();
 
     if (canAddToCart && error) {
@@ -100,77 +105,91 @@
     if (signature === lastUrlSignature) return;
 
     lastUrlSignature = signature;
+
     syncOptionsToUrl(options);
   }
 
-  
-    // -----------------------------
-  // Handlers
-  // -----------------------------
+  function getAvailableOptions(name) {
+    return resolver?.getAvailableOptions(name) ?? [];
+  }
+
+  function hasAvailableOption(name, value) {
+    return (
+      resolver?.hasAvailableOption(name, value) ?? false
+    );
+  }
+
   $: currentQty =
-  $cart?.lines?.find(
-    (l) => l.merchandise?.id === selectedVariant?.id
-  )?.quantity ?? 0;
+    $cart?.lines?.find(
+      (l) => l.merchandise?.id === selectedVariant?.id
+    )?.quantity ?? 0;
 
-$: infoMessage =
-  userInteracted && selectedVariant?.id
-    ? getStockMessage(selectedVariant)
-    : "";
-  
+  $: infoMessage =
+    userInteracted && selectedVariant?.id
+      ? getStockMessage(selectedVariant)
+      : "";
+
+  $: displayVariant =
+    selectedVariant ??
+    product.selectedOrFirstAvailableVariant ??
+    product.variants?.[0];
+
   async function handleAddToCart() {
-  error = "";
+    error = "";
 
-  if (!selectedVariant?.id) {
-    error = "Please select a variant";
-    return;
-  }
+    if (!selectedVariant?.id) {
+      error = "Please select a variant";
+      return;
+    }
 
-  const limitError = getMaxLimitError(selectedVariant, currentQty);
-
-  if (limitError) {
-    error = limitError;
-    return;
-  }
-
-  loading = true;
-
-  try {
-    await addToCart(selectedVariant.id, 1);
-
-    const latestLine = $cart?.lines?.find(
-      (l) => l.merchandise?.id === selectedVariant.id
+    const limitError = getMaxLimitError(
+      selectedVariant,
+      currentQty
     );
 
-    cartToast.set({
-      open: true,
-      line: latestLine ?? null,
-    });
+    if (limitError) {
+      error = limitError;
+      return;
+    }
 
-  } finally {
-    loading = false;
+    loading = true;
+
+    try {
+      await addToCart(selectedVariant.id, 1);
+
+      const latestLine = $cart?.lines?.find(
+        (l) =>
+          l.merchandise?.id === selectedVariant.id
+      );
+
+      cartToast.set({
+        open: true,
+        line: latestLine ?? null,
+      });
+    } finally {
+      loading = false;
+    }
   }
-}
 </script>
 
 
 
-{#if resolver}
   {#if mode === "quick"}
     <div class="space-y-4">
-      {#if selectedVariant?.price}
-        <Money
-          amount={selectedVariant.price.amount}
-          currencyCode={selectedVariant.price.currencyCode}
-        />
-      {/if}
+
+     <Money
+          amount={displayVariant.price.amount}
+          currencyCode={displayVariant.price.currencyCode}
+          />
+    
 
       <QuickAdd
         {product}
         selectedOptions={selectedOptions}
         selectedVariant={selectedVariant}
         updateOption={updateOption}
-        getAvailableOptions={resolver.getAvailableOptions}
-        hasAvailableOption={resolver.hasAvailableOption}
+        getAvailableOptions={getAvailableOptions}
+        hasAvailableOption={hasAvailableOption}
       />
 
       <ProductAddToCart
@@ -187,19 +206,11 @@ $: infoMessage =
     </div>
   {:else}
     <div class="space-y-6">
-      {#if selectedVariant?.price}
-        <Money
-          amount={selectedVariant.price.amount}
-          currencyCode={selectedVariant.price.currencyCode}
-        />
-      {:else}
-        {#if product.variants?.[0]?.price}
-          <Money
-            amount={product.variants[0].price.amount}
-            currencyCode={product.variants[0].price.currencyCode}
+
+     <Money
+          amount={displayVariant.price.amount}
+          currencyCode={displayVariant.price.currencyCode}
           />
-        {/if}
-      {/if}
 
       <div class="flex flex-wrap gap-1 pt-3.5">
         <DetailSelector
@@ -207,8 +218,8 @@ $: infoMessage =
           selectedOptions={selectedOptions}
           selectedVariant={selectedVariant}
           updateOption={updateOption}
-          getAvailableOptions={resolver.getAvailableOptions}
-          hasAvailableOption={resolver.hasAvailableOption}
+          getAvailableOptions={getAvailableOptions}
+          hasAvailableOption={hasAvailableOption}
         />
 
         <ProductAddToCart
@@ -230,7 +241,7 @@ $: infoMessage =
   
     </div>
   {/if}
-{/if}
+
 
 {#if error}
   <p class="text-[11px] uppercase tracking-wide text-red-600 mt-2">

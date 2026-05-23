@@ -33,7 +33,14 @@ export async function addToCart(cartId, variantId, quantity = 1) {
     lines,
   });
 
-  return res?.cartLinesAdd?.cart ?? null;
+  const cart = res?.cartLinesAdd?.cart;
+
+  if (!cart) return null;
+
+  // 🔥 IMPORTANT: re-fetch full cart
+  const fullCart = await getCart(cartId);
+
+  return fullCart;
 }
 
 export async function updateCartLine(cartId, lineId, quantity) {

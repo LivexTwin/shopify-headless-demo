@@ -4,7 +4,6 @@ import "../styles/layout.css";
 import CartProvider from "../components/Cart/CartProvider.svelte";
 import CartToast from "../components/Cart/CartToast.svelte";
 import TheNavigation from "../components/TheNavigation.astro";
-import TheFooter from "../components/TheFooter.astro";
 import SeoHead from "@components/SeoHead.astro";
 import { ClientRouter } from "astro:transitions";
 ---
@@ -23,15 +22,13 @@ import { ClientRouter } from "astro:transitions";
     <div id="site">
       <CartProvider client:load />
       <CartToast client:load />
-      <header class="sticky top-0 z-50 bg-white border-b border-gray-200">
+      <header>
         <TheNavigation />
       </header>
 
       <main>
         <slot />
       </main>
-
-      <footer><TheFooter /></footer>
     </div>
   </body>
 </html>

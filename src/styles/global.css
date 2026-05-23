@@ -14,24 +14,13 @@
   background-color: rgb(130 130 130 / var(--tw-bg-opacity, 1));
 }
 
+.malyxia-text .dud {
+  color: #7a0f14;
+}
+.malyxia-text .pre {
+  color: #1a1a1a;
+}
+
 button {
-  @apply cursor-pointer
-          disabled:pointer-events-none
-         transition-colors duration-200 ease-in-out;
-}
-
-svg {
-  @apply transition-opacity duration-200 ease-in-out;
-}
-
-svg:hover {
-  @apply opacity-60;
-}
-
-.product-description a {
-  @apply text-blue-700 underline decoration-blue-700 decoration-2;
-}
-
-::selection {
-  @apply bg-blue-300 text-white;
+  cursor: pointer;
 }

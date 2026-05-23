@@ -1,60 +1,107 @@
 ---
+import TheLogo from "../components/TheLogo.astro";
 import DefaultLayout from "../layouts/DefaultLayout.astro";
 import { shopifyFetch } from "../lib/shopify.ts";
 import { GET_DROP_PRODUCT } from "../lib/queries/products.ts";
+import BuyNow from "../components/Cart/BuyNow.svelte";
 
 import SeoHead from "../components/SeoHead.astro";
 import ProductMediaGallery from "../components/Product/ProductMediaGallery.svelte";
 import ProductPurchaseBlock from "../components/Product/ProductPurchaseBlock.svelte";
+import StockLabel from "@components/StockLabel.svelte";
 
 const data = await shopifyFetch(GET_DROP_PRODUCT);
-
 const product = data.products.nodes[0];
 ---
 
 <SeoHead title="MALYXIA — Chapter 1" />
+
 <DefaultLayout>
-  <!-- HERO -->
-  <section
-    class="min-h-screen flex flex-col justify-center items-center text-center px-6"
-  >
-    <h1 class="text-5xl md:text-7xl font-bold tracking-tight">INTENT</h1>
-    <p class="mt-4 text-sm uppercase tracking-widest opacity-60">Chapter 1</p>
-  </section>
+  <!-- GLOBAL HERO + SCROLL CORE -->
+  <main class="relative">
+    <!-- 🌌 HERO (INTENT DROP) -->
+    <section
+      class="min-h-[100svh] md:min-h-screen flex flex-col justify-center items-center text-center px-6 relative"
+    >
+      <h1 class="text-6xl md:text-8xl font-bold tracking-tight">INTENT</h1>
 
-  <!-- TRANSITION -->
-  <section class="py-16 text-center px-6">
-    <p class="text-sm uppercase tracking-wider opacity-70">
-      Designed with intention. Limited to 18.
-    </p>
-  </section>
-  <!-- PRODUCT -->
-  <section class="py-16 px-6 max-w-4xl mx-auto">
-    <div class="flex flex-col md:flex-row md:items-center gap-10 items-start">
-      <!-- IMAGE -->
-      <!-- FRONT AND BACK SLIDER -->
-      <div class="w-full md:w-2/3">
-        <ProductMediaGallery
-          client:load
-          images={product.images}
-          altBase={product.title}
-          variant="compact"
-        />
+      <p class="mt-4 text-[10px] uppercase tracking-[0.25em] opacity-60">
+        Chapter 1
+      </p>
+
+      <!-- subtle transition hint -->
+      <div class="absolute bottom-10 text-[10px] uppercase opacity-40">
+        Scroll to enter drop
       </div>
-      <!-- INFO -->
+    </section>
 
-      <div class="md:w-1/3">
-        <a href={`/products/${product.handle}`}>
-          <h2 class="uppercase">{product.title}</h2>
-        </a>
+    <!-- 🌑 SPLIT PRODUCT REALITY -->
+    <section class="min-h-screen grid grid-cols-1 md:grid-cols-2 gap-0">
+      <!-- LEFT: LORE / SPEC BLOCK -->
+      <div
+        class="p-8 md:p-16 font-mono text-xs leading-relaxed border-r border-black/10"
+      >
+        <p class="uppercase opacity-60 mb-6">[DROP_01] // INTENT TEE</p>
 
-        <!-- Product Purchase Block -->
+        <p class="mb-6">
+          PRICE // $55.00<br />
+        </p>
+        <p class="mb-6">
+          STOCK // {product.metafield?.value ?? "11/18"}
+        </p>
+        <p class="uppercase opacity-60 mb-2">SPECIFICATION:</p>
+        <p class="mb-6">
+          - 280 GSM LUXURY COMBED COTTON<br />
+          - CUSTOM OVERSIZED BOX FIT<br />
+          - HAND-PRINTED FADED BLACK FINISH
+        </p>
+
+        <p class="uppercase opacity-60 mb-2">THE PHILOSOPHY:</p>
+        <p>
+          A STUDY IN PURPOSEFUL IMPERFECTION.<br />
+          MADE TO BE WORN UNTIL RIPPED.
+        </p>
+      </div>
+
+      <!-- RIGHT: MEDIA + PURCHASE -->
+      <div class="p-8 md:p-16 flex flex-col">
+        <!-- MEDIA -->
+        <div class="w-full">
+          <ProductMediaGallery
+            client:load
+            images={product.images}
+            altBase={product.title}
+            productHandle={product.handle}
+            variant="compact"
+          />
+        </div>
+
+        <!-- TITLE -->
+        <h2 class="uppercase tracking-wide text-sm mt-6">
+          {product.title}
+        </h2>
+
+        <!-- PURCHASE -->
         <ProductPurchaseBlock
           client:only="svelte"
           product={product}
           mode="quick"
         />
       </div>
+    </section>
+
+    <!-- 📱 MOBILE CTA BAR -->
+    <div
+      class="fixed top-0 left-0 right-0 md:hidden border-t border-black/10 bg-white"
+    >
+      <div
+        class="flex items-center justify-between px-4 py-3 text-xs uppercase"
+      >
+        <span>{product.title} — $55.00</span>
+        <BuyNow client:load product={product} />
+      </div>
     </div>
-  </section>
+  </main>
+
+  <TheLogo />
 </DefaultLayout>
