@@ -16,7 +16,7 @@
     <ShopifyImage
       image={normalizeProductImage(line.merchandise.product)}
       loading="lazy"
-      classList="w-[3rem] h-[3rem]  object-cover"
+      classList="w-[3rem] h-[3rem]  object-contain"
       sizes="(max-width: 40px) 40px, 40px"
       width={40}
       height={40}

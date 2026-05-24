@@ -1,0 +1,43 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# -----------------------------
+# SPA / client router fallback
+# (important since you use Svelte client routing)
+# -----------------------------
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# -----------------------------
+# Caching rules (VERY important)
+# -----------------------------
+
+# Static assets (hashed files)
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Images
+[[headers]]
+  for = "/*.{png,jpg,jpeg,webp,avif,svg}"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# HTML (important for SEO freshness)
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# Fallback safety
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"

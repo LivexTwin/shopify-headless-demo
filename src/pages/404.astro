@@ -4,14 +4,18 @@ import DefaultLayout from "../layouts/DefaultLayout.astro";
 ---
 
 <DefaultLayout>
-  <section class="text-center py-20 px-6">
-    <h1 class="text-5xl font-bold mb-4 text-red-600">404</h1>
-    <p class="text-xl mb-6">Oops! The page you're looking for doesn't exist.</p>
+  <section
+    class="min-h-screen flex flex-col items-center justify-center text-center px-6 font-mono uppercase"
+  >
+    <h1 class="text-6xl mb-4 tracking-tight">404</h1>
+
+    <p class="text-xs opacity-60 mb-10">This page does not exist.</p>
+
     <a
       href="/"
-      class="inline-block px-6 py-3 bg-black text-white font-medium rounded hover:bg-gray-800 transition"
+      class="text-xs border border-black rounded-[2px] px-6 py-3 hover:bg-black hover:text-white transition"
     >
-      Go back home
+      Return
     </a>
   </section>
 </DefaultLayout>

@@ -1,25 +1,39 @@
 ---
 const {
-  title = "Shopify Starter Demo",
-  description = "Fast, modern headless Shopify storefront built with Astro and Svelte.",
-  ogImage = "/og-default.jpg", // fallback image path
+  title = "MALYXIA — Chapter 1",
+  description = "A raw apparel label built on imperfection, attitude, and limited drops.",
+  ogImage = null,
   url = "/",
 } = Astro.props;
 
 const baseUrl = Astro.site
   ? Astro.site.toString().replace(/\/$/, "")
-  : "https://shopify-headless-demo.netlify.app";
+  : "https://malyxia.xyz";
+
 const fullUrl = url.startsWith("http") ? url : baseUrl + url;
+
+// fallback OG image (safe placeholder for now)
+const fullOgImage = ogImage
+  ? ogImage.startsWith("http")
+    ? ogImage
+    : baseUrl + ogImage
+  : `${baseUrl}/og.jpg`; // temporary fallback
 ---
 
 <title>{title}</title>
+
 <meta name="description" content={description} />
+<link rel="canonical" href={fullUrl} />
+
+<meta property="og:type" content="website" />
 <meta property="og:url" content={fullUrl} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
-<meta property="og:image" content={ogImage} />
-<meta property="og:type" content="website" />
+<meta property="og:image" content={fullOgImage} />
+
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
-<meta name="twitter:image" content={ogImage} />
+<meta name="twitter:image" content={fullOgImage} />
+
+<meta name="theme-color" content="#000000" />

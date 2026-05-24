@@ -24,3 +24,52 @@
 button {
   cursor: pointer;
 }
+
+.noise-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 49;
+  opacity: 0.07;
+  background: white;
+  filter: url(#noiseFilter);
+}
+
+/* ACCESSIBILITY */
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 1px solid rgb(0, 0, 0);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.select-wrapper:has(:focus-visible) {
+  outline: 1px solid rgb(0, 0, 0);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Chrome, Edge, Safari */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.55);
+  background-clip: content-box;
+}

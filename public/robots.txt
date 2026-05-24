@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+Disallow: /api/
+Disallow: /cart/
+
+Sitemap: https://malyxia.xyz/sitemap-index.xml

@@ -32,7 +32,7 @@ const product = data.productByHandle;
 />
 
 <DefaultLayout>
-  <div class="relative z-10 min-h-screen">
+  <div class="relative z-10 min-h-screen pb-20">
     <div class="lg:grid lg:gap-12 lg:grid-cols-[1fr_500px]">
       <!-- LEFT: MEDIA -->
       <div class="flex-1 min-w-0">
@@ -68,4 +68,30 @@ const product = data.productByHandle;
       </div>
     </div>
   </div>
+
+  <!-- ✅ JSON-LD goes here -->
+  <script
+    is:inline
+    type="application/ld+json"
+    set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Product",
+      name: product.title,
+      image: product.images?.edges?.[0]?.node?.url,
+      description: product.description ?? "MALYXIA drop product",
+      brand: {
+        "@type": "Brand",
+        name: "MALYXIA",
+      },
+      offers: {
+        "@type": "Offer",
+        priceCurrency: "USD",
+        price: product.selectedOrFirstAvailableVariant?.price?.amount,
+        availability: product.selectedOrFirstAvailableVariant?.availableForSale
+          ? "https://schema.org/InStock"
+          : "https://schema.org/OutOfStock",
+        url: `https://malyxia.xyz/products/${product.handle}`,
+      },
+    })}
+  />
 </DefaultLayout>

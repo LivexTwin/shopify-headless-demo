@@ -52,7 +52,7 @@
 
   <img
     src={getMainSrc()}
-    alt={image?.altText || "Product image"}
+    alt={image?.altText || "Product"}
     class={classList}
     width={image?.width}
     height={image?.height}

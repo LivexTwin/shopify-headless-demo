@@ -8,15 +8,14 @@ import BuyNow from "../components/Cart/BuyNow.svelte";
 import SeoHead from "../components/SeoHead.astro";
 import ProductMediaGallery from "../components/Product/ProductMediaGallery.svelte";
 import ProductPurchaseBlock from "../components/Product/ProductPurchaseBlock.svelte";
-import StockLabel from "@components/StockLabel.svelte";
 
 const data = await shopifyFetch(GET_DROP_PRODUCT);
 const product = data.products.nodes[0];
 ---
 
-<SeoHead title="MALYXIA — Chapter 1" />
-
 <DefaultLayout>
+  <SeoHead title="MALYXIA — Chapter 1" />
+
   <!-- GLOBAL HERO + SCROLL CORE -->
   <main class="relative">
     <!-- 🌌 HERO (INTENT DROP) -->
